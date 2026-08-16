@@ -12,12 +12,9 @@ const nextConfig: NextConfig = {
     formats: ['image/webp', 'image/avif'],
   },
   
-  // Ignorar erros de TS e ESLint no build para economizar RAM no servidor
+  // Ignorar erros de TS no build para economizar RAM no servidor
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   // Headers de cache para assets estáticos
