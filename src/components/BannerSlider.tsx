@@ -8,16 +8,10 @@ import { db } from "@/lib/firebase";
 
 const DEFAULT_BANNERS = [
   {
-    image: "/Banner Uranos.png",
-    imageMobile: "/Banner Uranos Mobile.png",
-    title: "Linha Uranos",
+    image: "/macsport-maia-whatsapp-web-1920x640.png",
+    imageMobile: "/macsport-maia-whatsapp-mobile-1080x1920.png",
+    title: "Bem-vindo à Macsport",
     order: 1
-  },
-  {
-    image: "/Banner New Evo.png",
-    imageMobile: "/Banner New Evo Mobile.png",
-    title: "New Evo",
-    order: 2
   }
 ];
 
