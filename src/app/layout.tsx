@@ -129,8 +129,8 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/Logo Macsport Amarela.png" />
+        <link rel="icon" href="/FAV.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/FAV.png" />
         <meta name="theme-color" content="#F5C400" />
         <link rel="preconnect" href="https://firestore.googleapis.com" />
         <link rel="preconnect" href="https://i.ibb.co" />
