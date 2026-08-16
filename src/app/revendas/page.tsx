@@ -16,8 +16,7 @@ import RevendasClient from './RevendasClient'
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 
-export const revalidate = 60; // ISR for Firebase
-
+export const dynamic = 'force-dynamic';
 export default async function RevendasPage() {
   let revendas: any[] = []
 

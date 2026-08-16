@@ -21,14 +21,14 @@ export default function RevendasClient({ revendas }: { revendas: any[] }) {
   const [activeRevenda, setActiveRevenda] = useState<any | null>(null);
   const [mapBounds, setMapBounds] = useState<any | null>(null);
 
-  // Filter revendas based on map bounds
+  // Filter revendas based on map bounds and limit to 3
   const visibleRevendas = revendas.filter(rev => {
     if (!mapBounds) return true; // If map hasn't loaded bounds yet, show all
     if (!rev.lat || !rev.lng) return true; // Keep items without coordinates so they aren't hidden forever
     
     // Check if revenda is within current map bounds
     return mapBounds.contains([rev.lat, rev.lng]);
-  });
+  }).slice(0, 3); // Mostrar no maximo 3 revendas
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 mt-12">

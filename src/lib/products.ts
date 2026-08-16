@@ -20,7 +20,7 @@ export async function getProducts() {
     const data = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    })).filter((p: any) => p.oculto !== true);
+    })).filter((p: any) => p.oculto !== true && String(p.oculto).toLowerCase() !== 'true');
     
     // Atualiza cache
     cachedProducts = data;
@@ -74,9 +74,23 @@ export function slugify(text: string) {
 export async function getProductBySlug(slug: string) {
   try {
     const products = await getProducts();
-    return products.find((p: any) => slugify(p.title) === slug) || null;
+    return products.find((p: any) => slugify(p.title || p.nome) === slug) || null;
   } catch (error) {
     console.error('Error finding product:', error);
+    return null;
+  }
+}
+
+export async function getProductBySlugAndLinha(linhaSlug: string, produtoSlug: string) {
+  try {
+    const products = await getProducts();
+    return products.find((p: any) => {
+      const pLinha = slugify(p.linha || 'macsport');
+      const pSlug = slugify(p.nome || p.title);
+      return pLinha === linhaSlug && pSlug === produtoSlug;
+    }) || null;
+  } catch (error) {
+    console.error('Error finding product by linha:', error);
     return null;
   }
 }

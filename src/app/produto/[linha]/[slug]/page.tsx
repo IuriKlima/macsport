@@ -8,9 +8,9 @@ import { ProductTabs } from './ProductTabs'
 
 export const revalidate = 60; // ISR for Firebase
 
-export default async function ProdutoPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProdutoPage({ params }: { params: Promise<{ linha: string, slug: string }> }) {
   const resolvedParams = await params
-  const produto = await getProductBySlug(resolvedParams.slug)
+  const produto = await getProductBySlugAndLinha(resolvedParams.linha, resolvedParams.slug)
   
   if (!produto) {
     notFound()
@@ -121,7 +121,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ slug: 
                   <span className="text-[10px] md:text-xs text-[#F5C400] font-bold tracking-wider uppercase mb-1 md:mb-2">{item.categoria || item.subcategory || item.linha || item.category || 'Macsport'}</span>
                   <h3 className="text-sm md:text-base font-bold text-foreground mb-3 md:mb-4 line-clamp-2 leading-tight">{(item.nome || item.title)}</h3>
                   <div className="mt-auto pt-3 md:pt-4 border-t border-border">
-                    <Link href={`/produto/${slugify((item.nome || item.title))}`} className="block text-center w-full bg-transparent group-hover:bg-[#F5C400] text-[#F5C400] group-hover:text-black border border-[#F5C400] py-2 px-2 md:px-4 rounded-t-3xl rounded-b-none text-xs md:text-sm font-bold transition-colors before:absolute before:inset-0">
+                    <Link href={`/produto/${slugify(item.linha || 'macsport')}/${slugify((item.nome || item.title))}`} className="block text-center w-full bg-transparent group-hover:bg-[#F5C400] text-[#F5C400] group-hover:text-black border border-[#F5C400] py-2 px-2 md:px-4 rounded-t-3xl rounded-b-none text-xs md:text-sm font-bold transition-colors before:absolute before:inset-0">
                       VER DETALHES
                     </Link>
                   </div>

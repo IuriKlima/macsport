@@ -73,7 +73,7 @@ export function BannerSlider() {
             
             {/* Imagem Mobile */}
             <Image
-              src={banner.imageMobile || banner.image}
+              src={(banner.imageMobile && banner.imageMobile.trim() !== "") ? banner.imageMobile : banner.image}
               alt={banner.title || 'Banner Macsport'}
               width={750}
               height={500}
