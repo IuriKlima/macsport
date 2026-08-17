@@ -86,16 +86,19 @@ export function HomeProductShowcase({ products }: { products: any[] }) {
                 <span className="text-[10px] md:text-xs text-[#F5C400] font-bold tracking-wider uppercase line-clamp-1">
                   Linha {item.linha || item.category || 'Macsport'}
                 </span>
-                {item.sku && (
+                {(item.codigo || item.sku) && (
                   <span className="text-[9px] md:text-[10px] text-gray-500 font-bold bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">
-                    Cód: {item.sku}
+                    Cód: {item.codigo || item.sku}
                   </span>
                 )}
               </div>
               <h3 className="text-sm md:text-lg font-bold text-foreground mb-3 md:mb-4 line-clamp-2 leading-tight">{(item.nome || item.title)}</h3>
+              <p className="text-xs text-text-muted mb-4 line-clamp-2 hidden md:block">
+                {typeof item.beneficios === 'string' ? item.beneficios : (Array.isArray(item.beneficios) ? item.beneficios[0] : (item.descricao || item.description || ''))}
+              </p>
               <div className="mt-auto pt-3 md:pt-4 border-t border-border">
                 <Link href={`/produto/${slugify(item.linha || 'macsport')}/${slugify((item.nome || item.title))}`} className="block text-center w-full bg-transparent group-hover:bg-[#F5C400] text-[#F5C400] group-hover:text-black border border-[#F5C400] py-2 px-2 md:px-4 rounded-full text-xs md:text-sm font-bold transition-colors before:absolute before:inset-0">
-                  VER DETALHES
+                  VER PRODUTOS
                 </Link>
               </div>
             </div>

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 import { getProducts } from "@/lib/products";
 import { getPosts } from "@/lib/blog";
 import { BannerSlider } from "@/components/BannerSlider";
@@ -13,12 +15,22 @@ export default async function Home() {
   const products = await getProducts();
   const allPosts = await getPosts();
   const topPosts = allPosts.slice(0, 3);
+  
+  let initialBanners: any[] = [];
+  try {
+    const snap = await getDocs(collection(db, "slides"));
+    if (!snap.empty) {
+      initialBanners = snap.docs.map(d => d.data()).sort((a: any, b: any) => a.order - b.order);
+    }
+  } catch (err) {
+    console.error("Failed to load slides on server", err);
+  }
 
   return (
     <div className="flex flex-col w-full">
       {/* Banners Section */}
       <section className="w-full flex flex-col">
-        <BannerSlider />
+        <BannerSlider initialBanners={initialBanners} />
       </section>
 
       {/* Products Grid Container */}

@@ -3,37 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
-const DEFAULT_BANNERS = [
-  {
-    image: "/macsport-maia-whatsapp-web-1920x640.png",
-    imageMobile: "/macsport-maia-whatsapp-mobile-1080x1920.png",
-    title: "Bem-vindo à Macsport",
-    order: 1
-  }
-];
+interface BannerSliderProps {
+  initialBanners?: any[];
+}
 
-export function BannerSlider() {
+export function BannerSlider({ initialBanners = [] }: BannerSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [banners, setBanners] = useState<any[]>(DEFAULT_BANNERS);
   const [isPaused, setIsPaused] = useState(false);
 
-  useEffect(() => {
-    async function loadSlides() {
-      try {
-        const snap = await getDocs(collection(db, "slides"));
-        if (!snap.empty) {
-          const data = snap.docs.map(d => d.data()).sort((a, b) => a.order - b.order);
-          setBanners(data);
-        }
-      } catch (err) {
-        console.error("Failed to load slides", err);
-      }
-    }
-    loadSlides();
-  }, []);
+  const banners = initialBanners;
 
   useEffect(() => {
     if (banners.length <= 1 || isPaused) return;
@@ -43,6 +22,8 @@ export function BannerSlider() {
 
     return () => clearInterval(timer);
   }, [banners.length, isPaused]);
+
+  if (banners.length === 0) return null;
 
   return (
     <div 
@@ -78,6 +59,7 @@ export function BannerSlider() {
               width={750}
               height={500}
               priority={index === 0}
+              fetchPriority={index === 0 ? "high" : "auto"}
               className="w-full min-h-[500px] object-cover block md:hidden"
             />
             
@@ -88,6 +70,7 @@ export function BannerSlider() {
               width={1920}
               height={600}
               priority={index === 0}
+              fetchPriority={index === 0 ? "high" : "auto"}
               className="w-full h-auto min-h-[500px] object-cover hidden md:block"
             />
           </Link>

@@ -19,11 +19,23 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/admin");
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+      
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      });
+      
+      if (res.ok) {
+        router.push("/admin");
+      } else {
+        throw new Error("Falha no servidor ao criar sessão segura.");
+      }
     } catch (err: any) {
       console.error(err);
-      setError("Credenciais inválidas. Verifique seu e-mail e senha.");
+      setError("Credenciais inválidas ou erro de sessão.");
     } finally {
       setLoading(false);
     }

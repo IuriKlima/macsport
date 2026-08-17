@@ -8,7 +8,6 @@ import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { SiteHeader, SiteFooter } from "@/components/SiteLayoutManager";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { LoadingScreen } from "@/components/LoadingScreen";
 import { getSettings } from "@/lib/settings";
 import Script from "next/script";
 import { AOSProvider } from "@/components/AOSProvider";
@@ -153,7 +152,6 @@ export default async function RootLayout({
         `}</style>
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans transition-colors duration-200">
-        <LoadingScreen />
         <CookieBanner />
         <div id="google_translate_element"></div>
         <Script id="google-translate-init" strategy="afterInteractive">

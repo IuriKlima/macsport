@@ -9,7 +9,8 @@ export function ProductTabs({
   pdfUrl, 
   comoUsarImg,
   productImage,
-  productSku
+  productSku,
+  productCategory
 }: { 
   descriptionLines: string[], 
   productName: string, 
@@ -38,7 +39,7 @@ export function ProductTabs({
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         ctx.drawImage(img, 0, 0);
-        const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+        const dataURL = canvas.toDataURL("image/png");
         resolve(dataURL);
       };
       img.onerror = error => reject(error);
@@ -73,7 +74,7 @@ export function ProductTabs({
         try {
           const imgData = await getBase64ImageFromUrl(productImage);
           if (imgData) {
-            doc.addImage(imgData, 'JPEG', 15, 35, 85, 85);
+            doc.addImage(imgData, 'PNG', 15, 35, 85, 85);
           }
         } catch (e) {
           console.warn("Could not load product image", e);
@@ -98,7 +99,7 @@ export function ProductTabs({
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
       doc.setTextColor(17, 17, 17); // #111
-      const splitTitle = doc.splitTextToSize(productName, 74);
+      const splitTitle = doc.splitTextToSize(productName || "Equipamento", 74);
       doc.text(splitTitle, 113, currentY);
       currentY += splitTitle.length * 6 + 4;
       
@@ -129,7 +130,7 @@ export function ProductTabs({
       };
       
       if (productSku && productSku !== 'N/A') {
-        drawCheckItem(`SKU: ${productSku}`);
+        drawCheckItem(`Código: ${productSku}`);
       }
       drawCheckItem("Alta Performance e Durabilidade");
       
@@ -201,9 +202,9 @@ export function ProductTabs({
       // Save
       const safeName = (productName || "Equipamento").toString().replace(/\s+/g, '_');
       doc.save(`Macsport_${safeName}.pdf`);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error generating PDF:", err);
-      alert("Houve um erro ao gerar o PDF. Verifique o console.");
+      alert("Houve um erro ao gerar o PDF: " + (err.message || err));
     } finally {
       setIsGenerating(false);
     }

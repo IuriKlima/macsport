@@ -12,6 +12,7 @@ export function EquipamentosGrid({ produtosFiltrados }: EquipamentosGridProps) {
   const INITIAL_COUNT = 12;
   const LOAD_MORE_COUNT = 6;
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
+  const [searchTerm, setSearchTerm] = useState('');
   const observerTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,9 +41,17 @@ export function EquipamentosGrid({ produtosFiltrados }: EquipamentosGridProps) {
     };
   }, [produtosFiltrados.length]);
 
-  const visibleProducts = produtosFiltrados.slice(0, visibleCount);
+  const filteredBySearch = produtosFiltrados.filter((item: any) => {
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    const nome = (item.nome || item.title || '').toLowerCase();
+    const codigo = (item.codigo || item.sku || '').toLowerCase();
+    return nome.includes(term) || codigo.includes(term);
+  });
 
-  if (produtosFiltrados.length === 0) {
+  const visibleProducts = filteredBySearch.slice(0, visibleCount);
+
+  if (produtosFiltrados.length === 0 && !searchTerm) {
     return (
       <div className="text-center py-20 bg-card-bg rounded-[2rem] border border-border">
         <p className="text-text-muted text-lg">Nenhum equipamento encontrado nesta linha.</p>
@@ -55,7 +64,26 @@ export function EquipamentosGrid({ produtosFiltrados }: EquipamentosGridProps) {
 
   return (
     <>
-      <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6">
+      <div className="mb-6 flex items-center bg-card-bg border border-border rounded-full px-5 py-1 focus-within:border-[#F5C400] transition-colors shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0 mr-3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input 
+          type="text" 
+          placeholder="Buscar produto por nome ou código..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full bg-transparent border-none py-2.5 text-foreground focus:outline-none"
+        />
+      </div>
+
+      {filteredBySearch.length === 0 ? (
+        <div className="text-center py-20 bg-card-bg rounded-[2rem] border border-border">
+          <p className="text-text-muted text-lg">Nenhum equipamento encontrado para "{searchTerm}".</p>
+          <button onClick={() => setSearchTerm('')} className="inline-block mt-4 text-[#F5C400] hover:underline font-bold">
+            Limpar busca
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 xl:grid-cols-3 gap-3 md:gap-6">
         {visibleProducts.map((item: any) => (
           <div key={item.id} className="bg-card-bg rounded-[2rem] overflow-hidden group flex flex-col h-full border border-border hover:border-[#F5C400] transition-colors relative">
             <div className="relative w-full h-32 md:h-56 bg-card-bg p-2 md:p-4 flex items-center justify-center">
@@ -76,25 +104,29 @@ export function EquipamentosGrid({ produtosFiltrados }: EquipamentosGridProps) {
                 <span className="text-[10px] md:text-xs text-[#F5C400] font-bold tracking-wider uppercase line-clamp-1">
                   Linha {item.linha || item.category || 'Macsport'}
                 </span>
-                {item.sku && (
+                {(item.codigo || item.sku) && (
                   <span className="text-[9px] md:text-[10px] text-gray-500 font-bold bg-gray-100 px-1.5 py-0.5 rounded border border-gray-200">
-                    Cód: {item.sku}
+                    Cód: {item.codigo || item.sku}
                   </span>
                 )}
               </div>
               <h3 className="text-sm md:text-lg font-bold text-foreground mb-2 md:mb-4 line-clamp-2 leading-tight">{(item.nome || item.title)}</h3>
+              <p className="text-xs text-text-muted mb-4 line-clamp-2 hidden md:block">
+                {typeof item.beneficios === 'string' ? item.beneficios : (Array.isArray(item.beneficios) ? item.beneficios[0] : (item.descricao || item.description || ''))}
+              </p>
               <div className="mt-auto pt-2 md:pt-4 border-t border-border">
                 <Link href={`/produto/${slugify(item.linha || 'macsport')}/${slugify((item.nome || item.title))}`} className="block text-center w-full bg-transparent group-hover:bg-[#F5C400] text-[#F5C400] group-hover:text-background border border-[#F5C400] py-1.5 md:py-2 px-2 md:px-4 rounded-[2rem] text-xs md:text-sm font-bold transition-colors before:absolute before:inset-0">
-                  VER DETALHES
+                  VER PRODUTOS
                 </Link>
               </div>
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
       
       {/* Target for infinite scroll */}
-      {visibleCount < produtosFiltrados.length && (
+      {visibleCount < filteredBySearch.length && (
         <div ref={observerTarget} className="h-10 mt-6 flex justify-center items-center">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#F5C400]"></div>
         </div>
