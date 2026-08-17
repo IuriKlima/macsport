@@ -163,7 +163,7 @@ export default async function RootLayout({
         </Script>
         <Script 
           src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" 
-          strategy="afterInteractive" 
+          strategy="lazyOnload" 
         />
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`

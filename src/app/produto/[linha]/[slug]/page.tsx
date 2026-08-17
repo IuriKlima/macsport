@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowLeft, Check, FileText, Settings, ShieldCheck, Star } from 'lucide-react'
 import { getProductBySlugAndLinha, getProducts, slugify } from '@/lib/products'
 import { notFound } from 'next/navigation'
@@ -42,7 +43,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ linha:
           {/* Imagem do Produto */}
           <div className="bg-card-bg rounded-t-3xl rounded-b-none p-8 flex items-center justify-center border border-border min-h-[400px] lg:min-h-[500px]">
             {(produto.imagem_url || produto.imageUrl) ? (
-              <img src={(produto.imagem_url || produto.imageUrl)} alt={(produto.nome || produto.title)} className="w-full h-full object-contain" />
+              <Image src={(produto.imagem_url || produto.imageUrl)} alt={(produto.nome || produto.title) || 'Equipamento Macsport'} fill className="object-contain p-4" sizes="(max-width: 1024px) 100vw, 50vw" priority />
             ) : (
               <div className="w-64 h-64 opacity-50">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-gray-500">
@@ -131,7 +132,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ linha:
               <div key={item.id} className="bg-card-bg rounded-t-3xl rounded-b-none overflow-hidden group flex flex-col h-full border border-border hover:border-[#F5C400] transition-colors relative shadow-sm">
                 <div className="relative w-full h-40 md:h-48 bg-card-bg p-4 flex items-center justify-center">
                   {(item.imagem_url || item.imageUrl) ? (
-                    <img src={(item.imagem_url || item.imageUrl)} alt={(item.nome || item.title)} className="w-full h-full object-contain mix-blend-multiply" />
+                    <Image src={(item.imagem_url || item.imageUrl)} alt={(item.nome || item.title) || 'Equipamento Macsport'} fill className="object-contain mix-blend-multiply p-2" sizes="(max-width: 768px) 50vw, 25vw" />
                   ) : (
                     <div className="w-16 h-16 opacity-50">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-gray-500">

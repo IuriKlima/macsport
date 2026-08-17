@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { slugify } from '@/lib/products';
 
 interface EquipamentosGridProps {
@@ -88,7 +89,7 @@ export function EquipamentosGrid({ produtosFiltrados }: EquipamentosGridProps) {
           <div key={item.id} className="bg-card-bg rounded-[2rem] overflow-hidden group flex flex-col h-full border border-border hover:border-[#F5C400] transition-colors relative">
             <div className="relative w-full h-32 md:h-56 bg-card-bg p-2 md:p-4 flex items-center justify-center">
               {(item.imagem_url || item.imageUrl) ? (
-                <img src={(item.imagem_url || item.imageUrl)} alt={(item.nome || item.title)} className="w-full h-full object-contain" />
+                <Image src={(item.imagem_url || item.imageUrl)} alt={(item.nome || item.title) || 'Equipamento Macsport'} fill className="object-contain p-2" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
               ) : (
                 <div className="w-32 h-32 opacity-50">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-gray-500">

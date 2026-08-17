@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, Auth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -16,7 +16,15 @@ const firebaseConfig = {
 // Initialize Firebase (prevent re-initialization in Next.js fast refresh)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
-const auth = getAuth(app);
 const storage = getStorage(app);
 
-export { app, db, auth, storage };
+// Lazy init for Auth to prevent blocking main thread for normal users
+let authInstance: Auth | null = null;
+const getFirebaseAuth = (): Auth => {
+  if (!authInstance) {
+    authInstance = getAuth(app);
+  }
+  return authInstance;
+};
+
+export { app, db, getFirebaseAuth, storage };

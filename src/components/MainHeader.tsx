@@ -155,7 +155,7 @@ export function MainHeader() {
             <Search size={22} strokeWidth={2.5} />
           </Link>
 
-          <Link href="/orcamento" className="relative text-black hover:opacity-70 transition-opacity flex items-center justify-center w-10 h-10">
+          <Link href="/orcamento" aria-label="Ir para orçamentos" className="relative text-black hover:opacity-70 transition-opacity flex items-center justify-center w-10 h-10">
             <ShoppingCart size={24} strokeWidth={2.5} />
             {mounted && cartItemsCount > 0 && (
               <span className="absolute top-0 right-0 bg-black text-[#F5C400] text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
@@ -175,6 +175,8 @@ export function MainHeader() {
           <button 
             className="lg:hidden text-black hover:opacity-70 transition-opacity ml-1"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Fechar menu principal" : "Abrir menu principal"}
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X size={32} strokeWidth={2.5} /> : <Menu size={32} strokeWidth={2.5} />}
           </button>

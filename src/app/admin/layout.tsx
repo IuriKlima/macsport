@@ -4,7 +4,7 @@ import AdminRoute from "@/components/AdminRoute";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import { LayoutDashboard, Package, FileText, Image as ImageIcon, LogOut, Settings, BookOpen, MapPin, Info } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
+    const auth = getFirebaseAuth();
     await signOut(auth);
     router.push("/admin/login");
   };

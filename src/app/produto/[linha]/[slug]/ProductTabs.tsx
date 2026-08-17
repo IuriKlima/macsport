@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { FileText, Download, ShieldCheck, Award, Loader2 } from "lucide-react";
 
 export function ProductTabs({ 
@@ -340,8 +341,8 @@ export function ProductTabs({
         {activeTab === "comousar" && comoUsarImg && (
           <div className="animate-in fade-in duration-500">
             <h3 className="text-2xl font-bold mb-6 text-foreground">Como Usar</h3>
-            <div className="w-full rounded-[2rem] overflow-hidden border border-border">
-              <img src={comoUsarImg} alt={`Como usar o ${productName}`} className="w-full h-auto object-contain" />
+            <div className="w-full relative rounded-[2rem] overflow-hidden border border-border min-h-[400px]">
+              <Image src={comoUsarImg} alt={`Como usar o ${productName}`} fill className="object-contain" sizes="(max-width: 1024px) 100vw, 80vw" />
             </div>
           </div>
         )}
