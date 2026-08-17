@@ -26,6 +26,7 @@ export default function AdminQuemSomos() {
     block3_text1: "Investimos continuamente em pesquisa para desenvolver novos equipamentos e aprimorar os atuais. Nossa equipe de engenharia utiliza softwares avançados de simulação estrutural e biomecânica.",
     block3_text2: "Cada angulação e eixo de rotação é milimetricamente calculado para o máximo recrutamento muscular, oferecendo segurança total ao usuário e fluidez durante o exercício.",
     block3_img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=2070&auto=format&fit=crop",
+    block4_img: "/Banner Uranos.png",
   });
 
   useEffect(() => {
@@ -316,6 +317,46 @@ export default function AdminQuemSomos() {
                     try {
                       const imageUrl = await uploadToImgBB(file);
                       setFormData(prev => ({ ...prev, block3_img: imageUrl }));
+                    } finally {
+                      setUploadingImg(false);
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={uploadingImg}
+                />
+                <button 
+                  type="button"
+                  className="bg-gray-100 text-gray-700 font-medium px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-200 transition-colors"
+                >
+                  <ImageIcon size={18} /> {uploadingImg ? "Enviando..." : "Alterar Imagem"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bloco 4 */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
+          <h2 className="text-xl font-bold text-gray-900 border-b pb-2 mb-4">Bloco 4 (Performance)</h2>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Imagem Bloco 4 (Performance)</label>
+            <div className="flex items-center gap-4">
+              {formData.block4_img && (
+                <div className="w-32 h-20 rounded-lg overflow-hidden border">
+                  <img src={formData.block4_img} alt="Hero" className="w-full h-full object-cover" />
+                </div>
+              )}
+              <div className="relative">
+                <input 
+                  type="file" 
+                  accept="image/*" 
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    setUploadingImg(true);
+                    try {
+                      const imageUrl = await uploadToImgBB(file);
+                      setFormData(prev => ({ ...prev, block4_img: imageUrl }));
                     } finally {
                       setUploadingImg(false);
                     }

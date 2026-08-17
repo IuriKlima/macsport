@@ -141,6 +141,8 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
         />
+        {/* Meta tag para otimização em Inteligências Artificiais (LLMs SEO) */}
+        <link rel="alternate" type="text/markdown" title="Informações para LLMs (IA)" href="/llms.txt" />
         <style>{`
           .goog-te-banner-frame { display: none !important; }
           body { top: 0 !important; }

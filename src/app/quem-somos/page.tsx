@@ -30,6 +30,7 @@ export default async function QuemSomosPage() {
     block3_text1: "Investimos continuamente em pesquisa para desenvolver novos equipamentos e aprimorar os atuais. Nossa equipe de engenharia utiliza softwares avançados de simulação estrutural e biomecânica.",
     block3_text2: "Cada angulação e eixo de rotação é milimetricamente calculado para o máximo recrutamento muscular, oferecendo segurança total ao usuário e fluidez durante o exercício.",
     block3_img: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?q=80&w=2070&auto=format&fit=crop",
+    block4_img: "/Banner Uranos.png",
   };
 
   try {
@@ -170,7 +171,7 @@ export default async function QuemSomosPage() {
             </div>
             <div className="w-full md:w-1/2 relative">
               <div className="aspect-[4/3] bg-gray-200 rounded-[2rem] overflow-hidden shadow-xl relative">
-                <img src="/Banner Uranos.png" alt="Performance" className="w-full h-full object-cover" />
+                <img src={content.block4_img} alt="Performance" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <span className="absolute bottom-6 left-6 text-white font-bold text-2xl tracking-widest uppercase">MACSPORT</span>
               </div>

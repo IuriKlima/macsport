@@ -31,7 +31,8 @@ export default function AdminProdutos() {
     beneficios: "",
     pdf_url: "",
     como_usar_img: "",
-    oculto: false
+    oculto: false,
+    sku: ""
   });
 
   const [linhasDisponiveis, setLinhasDisponiveis] = useState<string[]>([]);
@@ -75,7 +76,8 @@ export default function AdminProdutos() {
       beneficios: formData.beneficios.split('\n').filter(b => b.trim() !== ''),
       pdf_url: formData.pdf_url,
       como_usar_img: formData.como_usar_img,
-      oculto: formData.oculto
+      oculto: formData.oculto,
+      sku: formData.sku
     };
 
     try {
@@ -130,13 +132,14 @@ export default function AdminProdutos() {
       beneficios: Array.isArray(prod.beneficios) ? prod.beneficios.join('\n') : "",
       pdf_url: prod.pdf_url || "",
       como_usar_img: prod.como_usar_img || "",
-      oculto: prod.oculto || false
+      oculto: prod.oculto || false,
+      sku: prod.sku || ""
     });
     setIsEditing(true);
   };
 
   const resetForm = () => {
-    setFormData({ id: "", nome: "", title: "", linha: "Macsport", categoria: "", imagem_url: "", descricao: "", beneficios: "", pdf_url: "", como_usar_img: "", oculto: false });
+    setFormData({ id: "", nome: "", title: "", linha: "Macsport", categoria: "", imagem_url: "", descricao: "", beneficios: "", pdf_url: "", como_usar_img: "", oculto: false, sku: "" });
   };
 
   const filteredProdutos = produtos.filter((prod) => {
@@ -359,7 +362,8 @@ export default function AdminProdutos() {
       beneficios: Array.isArray(p.beneficios) ? p.beneficios.join(';') : (p.beneficios || ""),
       imagem_url: p.imagem_url || p.imageUrl || "",
       pdf_url: p.pdf_url || "",
-      como_usar_img: p.como_usar_img || ""
+      como_usar_img: p.como_usar_img || "",
+      sku: p.sku || ""
     }));
 
     const csv = Papa.unparse(exportData);
@@ -435,6 +439,10 @@ export default function AdminProdutos() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nome do Equipamento *</label>
                 <input required type="text" value={formData.nome} onChange={(e) => setFormData({...formData, nome: e.target.value})} className="w-full border border-gray-300 rounded px-4 py-2 outline-none focus:border-[#F5C400] focus:ring-1 focus:ring-[#F5C400]" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Código (SKU)</label>
+                <input type="text" value={formData.sku} onChange={(e) => setFormData({...formData, sku: e.target.value})} className="w-full border border-gray-300 rounded px-4 py-2 outline-none focus:border-[#F5C400] focus:ring-1 focus:ring-[#F5C400]" placeholder="Ex: MAC-001" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">URL da Imagem Principal *</label>
@@ -626,6 +634,7 @@ export default function AdminProdutos() {
                     />
                   </th>
                   <th className="px-6 py-4">Foto</th>
+                  <th className="px-6 py-4">Código (SKU)</th>
                   <th className="px-6 py-4">Equipamento</th>
                   <th className="px-6 py-4">Linha</th>
                   <th className="px-6 py-4">Categoria</th>
@@ -661,6 +670,9 @@ export default function AdminProdutos() {
                           className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
                         />
                       </div>
+                    </td>
+                    <td className="px-6 py-4 text-gray-500 font-medium">
+                      {prod.sku || '-'}
                     </td>
                     <td className="px-6 py-4 font-bold text-gray-900">
                       <div className="flex items-center gap-2">

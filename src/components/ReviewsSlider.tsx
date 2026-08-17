@@ -34,8 +34,16 @@ export default function ReviewsSlider() {
       <div className="flex items-center gap-3 mb-10 flex-wrap justify-between">
         <div className="flex items-center gap-3">
           <h2 className="text-3xl font-bold">O que nossos clientes dizem</h2>
-          <div className="flex bg-card-bg px-3 py-1 rounded-full text-background text-sm font-bold gap-1 items-center">
-            Google <Star size={14} className="text-yellow-500 fill-yellow-500 ml-1" /> 5.0
+          <div className="flex bg-white border border-gray-200 px-3 py-1 rounded-full text-black text-sm font-bold gap-1 items-center shadow-sm">
+            <span className="font-bold tracking-tight">
+              <span className="text-[#4285F4]">G</span>
+              <span className="text-[#EA4335]">o</span>
+              <span className="text-[#FBBC05]">o</span>
+              <span className="text-[#4285F4]">g</span>
+              <span className="text-[#34A853]">l</span>
+              <span className="text-[#EA4335]">e</span>
+            </span> 
+            <Star size={14} className="text-yellow-500 fill-yellow-500 ml-1" /> 5.0
           </div>
         </div>
         <div className="flex gap-2">
