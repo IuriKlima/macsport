@@ -12,6 +12,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { getSettings } from "@/lib/settings";
 import Script from "next/script";
 import { AOSProvider } from "@/components/AOSProvider";
+import { CookieBanner } from "@/components/CookieBanner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -153,6 +154,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans transition-colors duration-200">
         <LoadingScreen />
+        <CookieBanner />
         <div id="google_translate_element"></div>
         <Script id="google-translate-init" strategy="afterInteractive">
           {`
@@ -263,8 +265,12 @@ export default async function RootLayout({
                     )}
                   </div>
                 </div>
-                <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-[#333] text-center text-xs text-gray-500">
-                  &copy; {new Date().getFullYear()} Macsport. Todos os direitos reservados.
+                <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-[#333] flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                  <p>&copy; {new Date().getFullYear()} Macsport. Todos os direitos reservados.</p>
+                  <div className="flex gap-4">
+                    <Link href="/politica-de-privacidade" className="hover:text-macsport transition-colors">Política de Privacidade</Link>
+                    <Link href="/termos-de-uso" className="hover:text-macsport transition-colors">Termos de Uso</Link>
+                  </div>
                 </div>
               </footer>
             </SiteFooter>
