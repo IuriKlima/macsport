@@ -14,7 +14,7 @@ export async function WhatsAppBanner() {
           href={whatsappLink} 
           target="_blank" 
           rel="noopener noreferrer" 
-          className="block w-full overflow-hidden rounded-[2rem] hover:scale-[1.02] transition-transform duration-300 shadow-xl"
+          className="block w-full overflow-hidden rounded-[2rem] hover:scale-[1.02] transition-transform duration-300"
         >
           {/* Imagem Mobile */}
           <Image 
