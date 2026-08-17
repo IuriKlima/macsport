@@ -24,7 +24,7 @@ export default async function Home() {
       {/* Products Grid Container */}
       <section id="produtos" className="w-full bg-background pt-16 pb-8 md:pt-24 md:pb-8 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6" data-aos="fade-up">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 Nossa Linha de <span className="text-macsport">Equipamentos</span>
@@ -46,7 +46,9 @@ export default async function Home() {
             </Link>
           </div>
           
-          <HomeProductShowcase products={products} />
+          <div data-aos="fade-up" data-aos-delay="200">
+            <HomeProductShowcase products={products} />
+          </div>
         </div>
       </section>
       
@@ -54,7 +56,7 @@ export default async function Home() {
 
       {/* Seção — Avaliações / Testimonials */}
       <section className="w-full bg-background py-8 px-4 md:px-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto" data-aos="fade-up">
           <ReviewsSlider />
         </div>
       </section>
@@ -62,7 +64,7 @@ export default async function Home() {
       {/* Seção — Blog */}
       <section className="w-full bg-card-bg py-16 md:py-24 px-4 md:px-8 border-t border-border">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6" data-aos="fade-up">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 Últimas do <span className="text-macsport">Blog</span>
@@ -85,8 +87,8 @@ export default async function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {topPosts.map((post: any) => (
-              <Link href={`/blog/${post.slug || post.id}`} key={post.id} className="group cursor-pointer block">
+            {topPosts.map((post: any, index: number) => (
+              <Link href={`/blog/${post.slug || post.id}`} key={post.id} className="group cursor-pointer block" data-aos="fade-up" data-aos-delay={index * 100}>
                 <article>
                   <div className="w-full h-56 bg-gray-200 rounded-[2rem] overflow-hidden mb-4 relative">
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
@@ -114,19 +116,19 @@ export default async function Home() {
       {/* Faixa de Diferenciais */}
       <section className="w-full bg-graphite border-y border-gray-800 py-16 px-4 md:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-700">
-          <div className="p-4">
+          <div className="p-4" data-aos="fade-up" data-aos-delay="0">
             <h4 className="text-foreground font-bold text-xl mb-2">Fabricação nacional</h4>
             <p className="text-text-muted text-sm">Equipamentos desenvolvidos e fabricados no Brasil.</p>
           </div>
-          <div className="p-4 pt-8 md:pt-4">
+          <div className="p-4 pt-8 md:pt-4" data-aos="fade-up" data-aos-delay="100">
             <h4 className="text-foreground font-bold text-xl mb-2">Engenharia que entrega desempenho</h4>
             <p className="text-text-muted text-sm">Projetos pensados para oferecer estabilidade.</p>
           </div>
-          <div className="p-4 pt-8 md:pt-4">
+          <div className="p-4 pt-8 md:pt-4" data-aos="fade-up" data-aos-delay="200">
             <h4 className="text-foreground font-bold text-xl mb-2">Atendimento especializado</h4>
             <p className="text-text-muted text-sm">Do primeiro contato ao pós-venda.</p>
           </div>
-          <div className="p-4 pt-8 md:pt-4">
+          <div className="p-4 pt-8 md:pt-4" data-aos="fade-up" data-aos-delay="300">
             <h4 className="text-foreground font-bold text-xl mb-2">Assistência técnica</h4>
             <p className="text-text-muted text-sm">Suporte para manter seus equipamentos.</p>
           </div>

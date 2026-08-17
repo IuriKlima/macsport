@@ -11,6 +11,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { getSettings } from "@/lib/settings";
 import Script from "next/script";
+import { AOSProvider } from "@/components/AOSProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -166,7 +167,8 @@ export default async function RootLayout({
         />
         <AccessibilityProvider>
           <LanguageProvider>
-            <AnalyticsTracker />
+            <AOSProvider>
+              <AnalyticsTracker />
             <SiteHeader />
             <main className="flex-1 flex flex-col">
               {children}
@@ -267,6 +269,7 @@ export default async function RootLayout({
               </footer>
             </SiteFooter>
             <WhatsAppButton phoneNumber={settings.whatsapp} />
+            </AOSProvider>
           </LanguageProvider>
         </AccessibilityProvider>
       </body>

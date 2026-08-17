@@ -68,7 +68,7 @@ export default async function QuemSomosPage() {
       </section>
 
       {/* Hero Image overlapping */}
-      <section className="px-4 md:px-8 lg:px-16 -mt-32 relative z-10 mb-20">
+      <section className="px-4 md:px-8 lg:px-16 -mt-32 relative z-10 mb-20" data-aos="fade-up">
         <div className="max-w-7xl mx-auto">
           <div className="w-full h-[300px] md:h-[500px] bg-gray-200 rounded-[2rem] overflow-hidden shadow-2xl relative">
             <img 
@@ -93,8 +93,8 @@ export default async function QuemSomosPage() {
         <div className="max-w-7xl mx-auto space-y-24">
           
           {/* Block 1 */}
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="w-full md:w-1/2">
+          <div className="flex flex-col md:flex-row items-center gap-12 overflow-hidden">
+            <div className="w-full md:w-1/2" data-aos="fade-right">
               <h2 className="text-3xl font-light mb-6 text-gray-900">{content.block1_title}</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 {content.block1_text1}
@@ -103,7 +103,7 @@ export default async function QuemSomosPage() {
                 {content.block1_text2}
               </p>
             </div>
-            <div className="w-full md:w-1/2 relative">
+            <div className="w-full md:w-1/2 relative" data-aos="fade-left">
               <div className="block aspect-video bg-gray-900 rounded-[2rem] overflow-hidden relative shadow-xl">
                 <iframe 
                   width="100%" 
@@ -120,8 +120,8 @@ export default async function QuemSomosPage() {
           </div>
 
           {/* Block 2 */}
-          <div className="flex flex-col md:flex-row-reverse items-center gap-12">
-            <div className="w-full md:w-1/2">
+          <div className="flex flex-col md:flex-row-reverse items-center gap-12 overflow-hidden">
+            <div className="w-full md:w-1/2" data-aos="fade-left">
               <h2 className="text-3xl font-light mb-6 text-gray-900">{content.block2_title}</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 {content.block2_text1}
@@ -130,7 +130,7 @@ export default async function QuemSomosPage() {
                 {content.block2_text2}
               </p>
             </div>
-            <div className="w-full md:w-1/2 relative">
+            <div className="w-full md:w-1/2 relative" data-aos="fade-right">
               <div className="aspect-[4/3] bg-gray-200 rounded-[2rem] overflow-hidden shadow-xl">
                 <img src={content.block2_img} alt="Qualidade" className="w-full h-full object-cover" />
               </div>
@@ -138,8 +138,8 @@ export default async function QuemSomosPage() {
           </div>
 
           {/* Block 3 */}
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="w-full md:w-1/2">
+          <div className="flex flex-col md:flex-row items-center gap-12 overflow-hidden">
+            <div className="w-full md:w-1/2" data-aos="fade-right">
               <h2 className="text-3xl font-light mb-6 text-gray-900">{content.block3_title}</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 {content.block3_text1}
@@ -148,7 +148,7 @@ export default async function QuemSomosPage() {
                 {content.block3_text2}
               </p>
             </div>
-            <div className="w-full md:w-1/2 relative">
+            <div className="w-full md:w-1/2 relative" data-aos="fade-left">
               <div className="aspect-[4/3] bg-gray-200 rounded-[2rem] overflow-hidden shadow-xl">
                 <img src={content.block3_img} alt="Pesquisa" className="w-full h-full object-cover" />
               </div>
@@ -156,8 +156,8 @@ export default async function QuemSomosPage() {
           </div>
 
           {/* Block 4 */}
-          <div className="flex flex-col md:flex-row-reverse items-center gap-12 pb-12">
-            <div className="w-full md:w-1/2">
+          <div className="flex flex-col md:flex-row-reverse items-center gap-12 pb-12 overflow-hidden">
+            <div className="w-full md:w-1/2" data-aos="fade-left">
               <h2 className="text-3xl font-light mb-6 text-gray-900">Performance em todos os sentidos</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 Somos uma empresa que fornece soluções completas para a sua academia. Conheça algumas das nossas linhas de destaque:
@@ -169,7 +169,7 @@ export default async function QuemSomosPage() {
                 <li><strong className="text-gray-900">Peso Livre:</strong> Estruturas maciças para fisiculturismo.</li>
               </ul>
             </div>
-            <div className="w-full md:w-1/2 relative">
+            <div className="w-full md:w-1/2 relative" data-aos="fade-right">
               <div className="aspect-[4/3] bg-gray-200 rounded-[2rem] overflow-hidden shadow-xl relative">
                 <img src={content.block4_img} alt="Performance" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

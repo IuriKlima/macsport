@@ -10,7 +10,7 @@ export function LoadingScreen() {
     // Hide the loading screen after a short delay to allow content to render
     const timer = setTimeout(() => {
       setIsFading(true);
-      setTimeout(() => setIsLoading(false), 500); // Wait for fade out animation
+      setTimeout(() => setIsLoading(false), 700); // Wait for fade out animation
     }, 1500);
 
     return () => clearTimeout(timer);
@@ -20,8 +20,8 @@ export function LoadingScreen() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#F5C400] transition-opacity duration-500 ease-in-out ${
-        isFading ? "opacity-0" : "opacity-100"
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#F5C400] transition-all duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+        isFading ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100"
       }`}
     >
       <div className="relative animate-pulse">
