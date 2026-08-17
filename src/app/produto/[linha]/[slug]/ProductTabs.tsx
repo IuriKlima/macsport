@@ -16,7 +16,8 @@ export function ProductTabs({
   pdfUrl?: string, 
   comoUsarImg?: string,
   productImage?: string,
-  productSku?: string
+  productSku?: string,
+  productCategory?: string
 }) {
   const [activeTab, setActiveTab] = useState("descricao");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -51,90 +52,138 @@ export function ProductTabs({
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF();
       
-      const margin = 20;
-      let yPos = 20;
       const pageWidth = doc.internal.pageSize.getWidth();
-
-      // 1. Add Header (Dark Gray background)
-      doc.setFillColor(17, 17, 17); // #111
-      doc.rect(0, 0, pageWidth, 40, 'F');
       
+      // 1. Top Yellow Bar
+      doc.setFillColor(245, 196, 0); // #F5C400
+      doc.rect(0, 0, pageWidth, 8, 'F');
+      
+      // 2. Logo
       try {
-        const logoData = await getBase64ImageFromUrl("/Logo Macsport Amarela.png");
+        const logoData = await getBase64ImageFromUrl("/Logo Macsport preto.png");
         if (logoData) {
-          // Adjust logo width/height to keep aspect ratio
-          doc.addImage(logoData, 'JPEG', margin, 10, 40, 15);
+          doc.addImage(logoData, 'PNG', 15, 15, 50, 12);
         }
       } catch (e) {
         console.warn("Could not load logo", e);
       }
-
-      yPos = 60;
-
-      // 2. Add Title
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.setTextColor(30, 30, 30);
-      const splitTitle = doc.splitTextToSize(productName, pageWidth - 2 * margin);
-      doc.text(splitTitle, margin, yPos);
-      yPos += splitTitle.length * 10;
-
-      // 3. Add SKU / Code
-      if (productSku && productSku !== 'N/A') {
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        doc.setTextColor(100, 100, 100);
-        doc.text(`CÓDIGO: ${productSku}`, margin, yPos);
-        yPos += 15;
-      }
-
-      // 4. Add Product Image
+      
+      // 3. Product Image
       if (productImage) {
         try {
           const imgData = await getBase64ImageFromUrl(productImage);
-          const imgWidth = 120;
-          const imgHeight = 120;
-          const xPos = (pageWidth - imgWidth) / 2;
-          
           if (imgData) {
-            doc.addImage(imgData, 'JPEG', xPos, yPos, imgWidth, imgHeight);
+            doc.addImage(imgData, 'JPEG', 15, 35, 85, 85);
           }
-          yPos += imgHeight + 20;
         } catch (e) {
           console.warn("Could not load product image", e);
-          yPos += 10;
         }
       }
-
-      // Check for page break before description
-      if (yPos > 240) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      // 5. Add Description
+      
+      // 4. Grey Info Box
+      doc.setFillColor(249, 249, 249); // Light grey (#F9F9F9)
+      doc.rect(105, 35, 90, 85, 'F');
+      
+      // Inside Info Box
+      let currentY = 45;
+      
+      // Category
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(245, 196, 0); // Yellow
+      doc.text((productCategory || "MACSPORT").toUpperCase(), 113, currentY);
+      currentY += 7;
+      
+      // Title
       doc.setFont("helvetica", "bold");
       doc.setFontSize(16);
-      doc.setTextColor(30, 30, 30);
-      doc.text("Especificações Técnicas", margin, yPos);
-      yPos += 10;
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(11);
-      doc.setTextColor(60, 60, 60);
-
-      const descriptionText = descriptionLines.join(". ");
-      const splitDesc = doc.splitTextToSize(descriptionText, pageWidth - 2 * margin);
+      doc.setTextColor(17, 17, 17); // #111
+      const splitTitle = doc.splitTextToSize(productName, 74);
+      doc.text(splitTitle, 113, currentY);
+      currentY += splitTitle.length * 6 + 4;
       
-      for (let i = 0; i < splitDesc.length; i++) {
-        if (yPos > 280) {
-          doc.addPage();
-          yPos = 20;
-        }
-        doc.text(splitDesc[i], margin, yPos);
-        yPos += 7;
+      // Description Lines
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(85, 85, 85); // #555
+      const shortDesc = descriptionLines.slice(0, 3).join(". ");
+      if (shortDesc) {
+        const splitShortDesc = doc.splitTextToSize(shortDesc + ".", 74);
+        doc.text(splitShortDesc, 113, currentY);
+        currentY += splitShortDesc.length * 4 + 4;
       }
-
+      
+      // Checkmarks
+      const drawCheckItem = (text: string) => {
+        doc.setDrawColor(245, 196, 0);
+        doc.setLineWidth(0.5);
+        // Draw simple checkmark
+        doc.lines([[1.5, 1.5], [3, -3]], 113, currentY - 1);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(85, 85, 85);
+        doc.text(text, 119, currentY);
+        currentY += 5;
+      };
+      
+      if (productSku && productSku !== 'N/A') {
+        drawCheckItem(`SKU: ${productSku}`);
+      }
+      drawCheckItem("Alta Performance e Durabilidade");
+      
+      // 5. Specs Section (Left)
+      let specsY = 135;
+      
+      // Sobre o Equipamento title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(17, 17, 17);
+      doc.text("Sobre o Equipamento", 15, specsY);
+      specsY += 8;
+      
+      // Specs List
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(85, 85, 85);
+      
+      for (let i = 0; i < descriptionLines.length; i++) {
+        if (specsY > 280) {
+          doc.addPage();
+          specsY = 20;
+        }
+        const line = descriptionLines[i] + ".";
+        const splitLine = doc.splitTextToSize(line, 95);
+        doc.text(splitLine, 15, specsY);
+        specsY += splitLine.length * 4 + 2;
+      }
+      
+      // 6. QR Code & Button (Right)
+      const qrY = 145;
+      const qrX = 125;
+      const qrSize = 50;
+      
+      try {
+        const productUrl = window.location.href;
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(productUrl)}&margin=1`;
+        const qrData = await getBase64ImageFromUrl(qrApiUrl);
+        if (qrData) {
+          doc.addImage(qrData, 'PNG', qrX, qrY, qrSize, qrSize);
+        }
+      } catch (e) {
+        console.warn("Could not load QR code", e);
+      }
+      
+      // Button "Ver o Equipamento"
+      const btnY = qrY + qrSize + 10;
+      doc.setFillColor(245, 196, 0); // Yellow
+      doc.roundedRect(qrX - 5, btnY, qrSize + 10, 10, 3, 3, 'F');
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(17, 17, 17);
+      const textWidth = doc.getTextWidth("Ver o Equipamento");
+      doc.textWithLink("Ver o Equipamento", qrX - 5 + ((qrSize + 10) - textWidth) / 2, btnY + 6.5, { url: window.location.href });
+      
       // Save
       doc.save(`Macsport_${productName.replace(/\s+/g, '_')}.pdf`);
     } catch (err) {

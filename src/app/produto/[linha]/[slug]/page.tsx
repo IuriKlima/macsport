@@ -104,6 +104,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ linha:
           comoUsarImg={produto.como_usar_img}
           productImage={produto.imagem_url || produto.imageUrl}
           productSku={produto.sku || 'N/A'}
+          productCategory={produto.categoria || produto.subcategory || produto.linha || produto.category || 'Macsport'}
         />
 
         {/* Google Maps Reviews */}
