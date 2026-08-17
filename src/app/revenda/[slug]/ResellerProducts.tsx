@@ -83,10 +83,10 @@ export default function ResellerProducts({
         </div>
 
         {/* Filtro de Categorias (Linhas) */}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-row overflow-x-auto hide-scrollbar gap-2 pb-2">
           <button 
             onClick={() => setActiveCategory(null)}
-            className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${!activeCategory ? 'bg-[#F5C400] text-black' : 'bg-transparent text-text-muted border border-border hover:border-[#F5C400]'}`}
+            className={`flex-shrink-0 px-5 py-2 rounded-[2rem] text-sm font-medium whitespace-nowrap transition-colors ${!activeCategory ? 'bg-[#F5C400] text-black font-bold border border-[#F5C400]' : 'bg-background text-text-muted border border-border hover:border-[#F5C400]'}`}
           >
             Todos
           </button>
@@ -94,7 +94,7 @@ export default function ResellerProducts({
             <button 
               key={idx}
               onClick={() => setActiveCategory(cat as string)}
-              className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${activeCategory === cat ? 'bg-[#F5C400] text-black' : 'bg-transparent text-text-muted border border-border hover:border-[#F5C400]'}`}
+              className={`flex-shrink-0 px-5 py-2 rounded-[2rem] text-sm font-medium whitespace-nowrap transition-colors ${activeCategory === cat ? 'bg-[#F5C400] text-black font-bold border border-[#F5C400]' : 'bg-background text-text-muted border border-border hover:border-[#F5C400]'}`}
             >
               Linha {cat}
             </button>
