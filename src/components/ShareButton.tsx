@@ -53,7 +53,7 @@ export function ShareButton({ productName }: { productName: string }) {
     <>
       <button 
         onClick={() => setIsOpen(true)}
-        className="w-full md:w-auto font-bold py-4 px-6 rounded-full text-lg transition-colors flex items-center justify-center gap-2 bg-transparent text-text-muted border border-border hover:border-[#F5C400] hover:text-[#F5C400]"
+        className="w-full h-full font-bold py-4 px-6 rounded-full text-lg transition-colors flex items-center justify-center gap-2 bg-transparent text-text-muted border border-border hover:border-[#F5C400] hover:text-[#F5C400]"
         aria-label="Compartilhar produto"
       >
         <Share2 size={22} />

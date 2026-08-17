@@ -95,14 +95,16 @@ export default async function ProdutoPage({ params }: { params: Promise<{ linha:
               }} 
             />
 
-            <div className="mt-4 flex gap-4 items-center">
+            <div className="mt-4 flex flex-col md:flex-row gap-4 items-stretch w-full">
               <Link 
                 href="/revendas" 
-                className="flex-1 md:flex-none font-bold py-4 px-8 rounded-full text-lg transition-colors flex items-center justify-center gap-2 bg-transparent text-foreground border border-border hover:border-[#F5C400] hover:text-[#F5C400]"
+                className="w-full md:w-[80%] font-bold py-4 px-8 rounded-full text-lg transition-colors flex items-center justify-center gap-2 bg-transparent text-foreground border border-border hover:border-[#F5C400] hover:text-[#F5C400]"
               >
                 VER REVENDA MAIS PRÓXIMA
               </Link>
-              <ShareButton productName={produto.nome || produto.title} />
+              <div className="w-full md:w-[20%]">
+                <ShareButton productName={produto.nome || produto.title} />
+              </div>
             </div>
           </div>
         </div>

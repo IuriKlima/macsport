@@ -22,7 +22,7 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
     <button 
       onClick={handleAdd}
       disabled={added}
-      className={`font-bold py-4 px-8 rounded-full text-lg w-full md:w-auto transition-colors flex items-center justify-center gap-2 ${
+      className={`font-bold py-4 px-8 rounded-full text-lg w-full transition-colors flex items-center justify-center gap-2 ${
         added 
           ? "bg-green-500 text-white hover:bg-green-600" 
           : "bg-[#F5C400] text-black hover:bg-yellow-500"
