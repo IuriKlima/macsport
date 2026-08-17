@@ -4,6 +4,8 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { slugify } from '@/lib/products';
 import 'leaflet/dist/leaflet.css';
 
 // Dynamically import the map component with no SSR to avoid window is not defined errors
@@ -18,6 +20,7 @@ const MapComponent = dynamic(
 );
 
 export default function RevendasClient({ revendas }: { revendas: any[] }) {
+  const router = useRouter();
   const [activeRevenda, setActiveRevenda] = useState<any | null>(null);
   const [mapBounds, setMapBounds] = useState<any | null>(null);
 
@@ -60,6 +63,17 @@ export default function RevendasClient({ revendas }: { revendas: any[] }) {
                 <p className="text-text-muted text-sm mb-2">{rev.endereco}</p>
                 <div className="flex flex-col gap-3 mt-3">
                   <p className="text-text-muted text-sm font-semibold">{rev.telefone}</p>
+                  
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/revenda/${slugify(rev.nome)}`);
+                    }}
+                    className="flex items-center justify-center gap-2 bg-transparent text-foreground border border-border hover:border-[#F5C400] hover:text-[#F5C400] transition-colors py-2 px-4 rounded-full text-sm font-bold w-full"
+                  >
+                    Visitar Página da Revenda
+                  </button>
+
                   {rev.telefone && (
                     <a 
                       href={`https://wa.me/55${rev.telefone.replace(/\D/g, '')}`} 

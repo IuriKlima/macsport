@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+import { slugify } from '@/lib/products';
 
 // Create a custom icon for the map marker
 const customIcon = new L.Icon({
@@ -109,7 +110,13 @@ export default function MapComponent({
                 <h4 className="font-bold text-lg">{rev.nome}</h4>
                 <p className="text-sm font-semibold">{rev.cidade}</p>
                 <p className="text-xs text-gray-600 mt-1">{rev.endereco}</p>
-                <p className="text-xs text-gray-600 font-bold">{rev.telefone}</p>
+                <p className="text-xs text-gray-600 font-bold mb-2">{rev.telefone}</p>
+                <a 
+                  href={`/revenda/${slugify(rev.nome)}`}
+                  className="block text-center w-full bg-[#F5C400] text-black hover:bg-yellow-500 transition-colors py-1.5 px-3 rounded text-xs font-bold"
+                >
+                  PÁGINA DA REVENDA
+                </a>
               </div>
             </Popup>
           </Marker>
