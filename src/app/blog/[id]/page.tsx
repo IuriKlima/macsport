@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Calendar, User, ChevronLeft } from "lucide-react";
 import type { Metadata } from 'next';
-
+import xss from 'xss';
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const post = await getPostById(resolvedParams.id);
@@ -83,7 +83,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ id: s
                 <div className="prose prose-invert max-w-none text-text-muted">
                   {post.conteudo ? (
                     // Use dangerouslySetInnerHTML se o conteúdo vier de um editor WYSIWYG
-                    <div dangerouslySetInnerHTML={{ __html: post.conteudo }} className="text-lg leading-relaxed text-text-muted [&>p]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-foreground [&>h3]:mt-8 [&>h3]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6 [&>li]:mb-2" />
+                    <div dangerouslySetInnerHTML={{ __html: xss(post.conteudo) }} className="text-lg leading-relaxed text-text-muted [&>p]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-foreground [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-foreground [&>h3]:mt-8 [&>h3]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6 [&>li]:mb-2" />
                   ) : (
                     <>
                       <p className="text-xl font-medium text-foreground mb-8 italic border-l-4 border-[#F5C400] pl-6 py-2 bg-[#F5C400]/5 rounded-r-xl">

@@ -19,20 +19,26 @@ admin.initializeApp({
   }),
 });
 
-// Pegar o UID do argumento da linha de comando
-const targetUid = process.argv[2];
+const action = process.argv[2];
+const targetUid = process.argv[3];
 
-if (!targetUid) {
-  console.error("Uso: node set-admin.js <USER_UID>");
+if (!action || !targetUid || (action !== '--grant' && action !== '--revoke')) {
+  console.error("Uso: node scripts/set-admin.js --grant <USER_UID> ou node scripts/set-admin.js --revoke <USER_UID>");
   console.error("Você pode encontrar seu USER_UID no painel do Firebase Authentication.");
   process.exit(1);
 }
 
-async function setAdmin() {
+async function manageAdmin() {
   try {
-    console.log(`Concedendo privilégios de Admin ao usuário: ${targetUid}`);
-    await admin.auth().setCustomUserClaims(targetUid, { admin: true });
-    console.log("Sucesso! O usuário agora é um Administrador.");
+    if (action === '--grant') {
+      console.log(`Concedendo privilégios de Admin ao usuário: ${targetUid}`);
+      await admin.auth().setCustomUserClaims(targetUid, { admin: true });
+      console.log("Sucesso! O usuário agora é um Administrador.");
+    } else if (action === '--revoke') {
+      console.log(`Removendo privilégios de Admin do usuário: ${targetUid}`);
+      await admin.auth().setCustomUserClaims(targetUid, { admin: false });
+      console.log("Sucesso! Os privilégios de Administrador foram removidos.");
+    }
     process.exit(0);
   } catch (error) {
     console.error("Erro ao definir custom claims:", error);
@@ -40,4 +46,4 @@ async function setAdmin() {
   }
 }
 
-setAdmin();
+manageAdmin();

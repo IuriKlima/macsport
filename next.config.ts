@@ -12,19 +12,22 @@ const nextConfig: NextConfig = {
     ],
     formats: ['image/webp', 'image/avif'],
   },
-  
-  // Ignorar erros de TS no build para economizar RAM no servidor
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
-  // Headers de cache para assets estáticos
+  // Headers de cache e segurança
   async headers() {
     return [
       {
         source: '/:all*(svg|jpg|jpeg|png|webp|avif|gif|ico|woff|woff2)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
         ],
       },
     ];

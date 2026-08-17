@@ -24,6 +24,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-leaflet": "^5.0.0",
+    "xss": "^1.0.15",
+    "zod": "^4.4.3",
     "zustand": "^5.0.15"
   },
   "devDependencies": {

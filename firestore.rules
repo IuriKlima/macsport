@@ -1,68 +1,49 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Função global que verifica se o usuário tem o Custom Claim de 'admin'
     function isAdmin() {
       return request.auth != null && request.auth.token.admin == true;
     }
 
-    // Regra default: bloqueia tudo que não estiver explicitamente permitido abaixo
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // ----------------------------------------------------------------------
-    // ACESSO PÚBLICO (Leitura liberada para exibir os produtos no site)
-    // ----------------------------------------------------------------------
     match /produtos/{produtoId} {
-      // Qualquer um pode ver os produtos
       allow read: if true;
-      // APENAS admins podem cadastrar, editar ou deletar produtos
       allow write: if isAdmin();
     }
-
     match /slides/{slideId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-
     match /blog/{postId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-
     match /quem-somos/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
     match /revendas/{revendaId} {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
     match /configuracoes/{configId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    // ----------------------------------------------------------------------
-    // ORÇAMENTOS E LEADS (Formulários do site)
-    // ----------------------------------------------------------------------
     match /orcamentos/{orcamentoId} {
-      // Qualquer um pode ENVIAR um orçamento
-      allow create: if true;
-      // APENAS admins podem ler, editar ou deletar os orçamentos recebidos
-      allow read, update, delete: if isAdmin();
+      // Bloqueia gravação pelo client; agora é via Server API.
+      // E bloqueia leitura pública, apenas Admin.
+      allow read, write: if isAdmin();
     }
-
     match /leads-revendas/{leadId} {
-      // Qualquer um pode ENVIAR lead
-      allow create: if true;
-      // APENAS admins podem ler e gerenciar
-      allow read, update, delete: if isAdmin();
+      allow read, write: if isAdmin();
     }
-
+    match /curriculos/{curriculoId} {
+      allow read, write: if isAdmin();
+    }
   }
 }
