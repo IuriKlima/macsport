@@ -24,27 +24,55 @@ export function ProductTabs({
   const [activeTab, setActiveTab] = useState("descricao");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  function getBase64ImageFromUrl(imageUrl: string): Promise<string> {
+  function getBase64ImageFromUrl(imageUrl: string, format: 'image/jpeg' | 'image/png' = 'image/jpeg'): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = "Anonymous";
       img.onload = () => {
+        // Reduzir imagem para evitar Out of Memory em celulares
+        const MAX_DIM = 800;
+        let width = img.width;
+        let height = img.height;
+        if (width > MAX_DIM || height > MAX_DIM) {
+          const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        
         const canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
+        canvas.width = width;
+        canvas.height = height;
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject("No context");
         
-        // Fill with white background in case of transparent PNG
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (format === 'image/jpeg') {
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, width, height);
+        }
         
-        ctx.drawImage(img, 0, 0);
-        const dataURL = canvas.toDataURL("image/png");
-        resolve(dataURL);
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        try {
+          const dataURL = canvas.toDataURL(format, 0.85);
+          resolve(dataURL);
+        } catch (e) {
+          reject(e);
+        }
       };
       img.onerror = error => reject(error);
-      img.src = imageUrl;
+      
+      try {
+        if (imageUrl.startsWith('data:')) {
+          img.src = imageUrl;
+        } else {
+          // Adiciona cache-buster para evitar problemas de CORS em cache no Safari/Mobile
+          const urlObj = new URL(imageUrl, window.location.origin);
+          urlObj.searchParams.set('cb', Date.now().toString());
+          img.src = urlObj.toString();
+        }
+      } catch (e) {
+        img.src = imageUrl;
+      }
     });
   }
 
@@ -62,7 +90,7 @@ export function ProductTabs({
       
       // 2. Logo
       try {
-        const logoData = await getBase64ImageFromUrl("/Logo Macsport preto.png");
+        const logoData = await getBase64ImageFromUrl("/Logo Macsport preto.png", "image/png");
         if (logoData) {
           doc.addImage(logoData, 'PNG', 15, 15, 50, 12);
         }
@@ -73,9 +101,9 @@ export function ProductTabs({
       // 3. Product Image
       if (productImage) {
         try {
-          const imgData = await getBase64ImageFromUrl(productImage);
+          const imgData = await getBase64ImageFromUrl(productImage, "image/jpeg");
           if (imgData) {
-            doc.addImage(imgData, 'PNG', 15, 35, 85, 85);
+            doc.addImage(imgData, 'JPEG', 15, 35, 85, 85);
           }
         } catch (e) {
           console.warn("Could not load product image", e);
@@ -169,9 +197,9 @@ export function ProductTabs({
       try {
         const productUrl = window.location.href;
         const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(productUrl)}&margin=1`;
-        const qrData = await getBase64ImageFromUrl(qrApiUrl);
+        const qrData = await getBase64ImageFromUrl(qrApiUrl, "image/jpeg");
         if (qrData) {
-          doc.addImage(qrData, 'PNG', qrX, qrY, qrSize, qrSize);
+          doc.addImage(qrData, 'JPEG', qrX, qrY, qrSize, qrSize);
         }
       } catch (e) {
         console.warn("Could not load QR code", e);
