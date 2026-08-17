@@ -117,8 +117,10 @@ export function ProductTabs({
       const drawCheckItem = (text: string) => {
         doc.setDrawColor(245, 196, 0);
         doc.setLineWidth(0.5);
-        // Draw simple checkmark
-        doc.lines([[1.5, 1.5], [3, -3]], 113, currentY - 1);
+        // Draw simple checkmark manually
+        doc.line(113, currentY - 1, 114.5, currentY + 0.5);
+        doc.line(114.5, currentY + 0.5, 117.5, currentY - 2.5);
+        
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(85, 85, 85);
@@ -176,19 +178,32 @@ export function ProductTabs({
       // Button "Ver o Equipamento"
       const btnY = qrY + qrSize + 10;
       doc.setFillColor(245, 196, 0); // Yellow
-      doc.roundedRect(qrX - 5, btnY, qrSize + 10, 10, 3, 3, 'F');
+      try {
+        doc.roundedRect(qrX - 5, btnY, qrSize + 10, 10, 3, 3, 'F');
+      } catch (e) {
+        doc.rect(qrX - 5, btnY, qrSize + 10, 10, 'F');
+      }
       
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
       doc.setTextColor(17, 17, 17);
       const textWidth = doc.getTextWidth("Ver o Equipamento");
-      doc.textWithLink("Ver o Equipamento", qrX - 5 + ((qrSize + 10) - textWidth) / 2, btnY + 6.5, { url: window.location.href });
+      const textX = qrX - 5 + ((qrSize + 10) - textWidth) / 2;
+      const textY = btnY + 6.5;
+      
+      doc.text("Ver o Equipamento", textX, textY);
+      try {
+        doc.link(qrX - 5, btnY, qrSize + 10, 10, { url: window.location.href });
+      } catch (e) {
+        console.warn("Link not supported", e);
+      }
       
       // Save
-      doc.save(`Macsport_${productName.replace(/\s+/g, '_')}.pdf`);
+      const safeName = (productName || "Equipamento").toString().replace(/\s+/g, '_');
+      doc.save(`Macsport_${safeName}.pdf`);
     } catch (err) {
       console.error("Error generating PDF:", err);
-      alert("Houve um erro ao gerar o PDF. Tente novamente.");
+      alert("Houve um erro ao gerar o PDF. Verifique o console.");
     } finally {
       setIsGenerating(false);
     }
