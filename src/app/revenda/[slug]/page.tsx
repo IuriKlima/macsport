@@ -106,7 +106,7 @@ export default async function RevendaLandingPage({ params }: { params: Promise<{
             </p>
           </div>
 
-          <ResellerProducts products={allProducts} resellerPhone={cleanPhone} resellerName={revenda.nome} />
+          <ResellerProducts products={allProducts} resellerPhone={cleanPhone} resellerName={revenda.nome} resellerSlug={resolvedParams.slug} />
         </div>
       </section>
     </main>

@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Trash2, Edit2, Plus, ArrowLeft } from "lucide-react";
+import { uploadToImgBB } from "@/lib/imgbb";
+import { Trash2, Edit2, Plus, ArrowLeft, Upload } from "lucide-react";
 
 export default function AdminRevendas() {
   const [revendas, setRevendas] = useState<any[]>([]);
@@ -16,6 +17,7 @@ export default function AdminRevendas() {
     nome: "",
     endereco: "",
     telefone: "",
+    logo_url: "",
   });
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export default function AdminRevendas() {
       
       setIsEditing(false);
       setCurrentRevenda(null);
-      setFormData({ cidade: "", nome: "", endereco: "", telefone: "" });
+      setFormData({ cidade: "", nome: "", endereco: "", telefone: "", logo_url: "" });
       fetchRevendas();
     } catch (error) {
       console.error("Erro ao salvar revenda:", error);
@@ -105,6 +107,7 @@ export default function AdminRevendas() {
       nome: revenda.nome || "",
       endereco: revenda.endereco || "",
       telefone: revenda.telefone || "",
+      logo_url: revenda.logo_url || "",
     });
     setIsEditing(true);
   };
@@ -112,7 +115,24 @@ export default function AdminRevendas() {
   const cancelEdit = () => {
     setIsEditing(false);
     setCurrentRevenda(null);
-    setFormData({ cidade: "", nome: "", endereco: "", telefone: "" });
+    setFormData({ cidade: "", nome: "", endereco: "", telefone: "", logo_url: "" });
+  };
+
+  const handleQuickUpload = async (e: React.ChangeEvent<HTMLInputElement>, revenda: any) => {
+    if (e.target.files && e.target.files[0]) {
+      try {
+        setLoading(true);
+        const url = await uploadToImgBB(e.target.files[0]);
+        await updateDoc(doc(db, "revendas", revenda.id), {
+          logo_url: url
+        });
+        fetchRevendas();
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao enviar a imagem. Tente novamente.");
+        setLoading(false);
+      }
+    }
   };
 
   if (loading && revendas.length === 0) {
@@ -191,6 +211,22 @@ export default function AdminRevendas() {
                   placeholder="Ex: (11) 99999-9999"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">URL do Logo</label>
+                <input 
+                  type="text" 
+                  value={formData.logo_url}
+                  onChange={e => setFormData({...formData, logo_url: e.target.value})}
+                  className="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#F5C400] focus:border-transparent outline-none"
+                  placeholder="https://..."
+                />
+                {formData.logo_url && (
+                  <div className="mt-2 w-16 h-16 bg-gray-100 rounded border flex items-center justify-center p-1">
+                    <img src={formData.logo_url} alt="Logo preview" className="max-w-full max-h-full object-contain" />
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="pt-6 flex justify-end gap-3">
@@ -220,18 +256,39 @@ export default function AdminRevendas() {
               <table className="w-full text-left">
                 <thead className="bg-gray-50 text-gray-700 text-sm uppercase font-semibold border-b">
                   <tr>
+                    <th className="p-4">Logo</th>
                     <th className="p-4">Nome da Loja</th>
-                    <th className="p-4">Cidade</th>
-                    <th className="p-4 hidden md:table-cell">Endereço</th>
+                    <th className="p-4 hidden md:table-cell">Endereço / Cidade</th>
                     <th className="p-4 text-right">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 text-gray-800">
                   {revendas.map(rev => (
                     <tr key={rev.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="p-4">
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1 relative group cursor-pointer overflow-hidden border border-dashed border-gray-300 hover:border-[#F5C400] transition-colors">
+                          {rev.logo_url ? (
+                            <img src={rev.logo_url} alt={rev.nome} className="max-w-full max-h-full object-contain group-hover:opacity-40 transition-opacity" />
+                          ) : (
+                            <Upload size={16} className="text-gray-400 group-hover:opacity-40" />
+                          )}
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                            <span className="text-white text-[8px] font-bold px-1 text-center leading-tight">Trocar</span>
+                          </div>
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            title="Clique para alterar a logo"
+                            onChange={(e) => handleQuickUpload(e, rev)}
+                            className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full h-full"
+                          />
+                        </div>
+                      </td>
                       <td className="p-4 font-medium">{rev.nome}</td>
-                      <td className="p-4">{rev.cidade}</td>
-                      <td className="p-4 text-sm text-gray-500 hidden md:table-cell">{rev.endereco}</td>
+                      <td className="p-4 text-sm text-gray-500 hidden md:table-cell">
+                        {rev.cidade}<br/>
+                        <span className="text-xs opacity-70">{rev.endereco}</span>
+                      </td>
                       <td className="p-4 text-right">
                         <div className="flex justify-end gap-2">
                           <button 

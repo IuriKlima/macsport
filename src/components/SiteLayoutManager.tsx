@@ -5,7 +5,7 @@ import { MainHeader } from "./MainHeader";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/revenda/")) return null;
   return (
     <>
       <TopBar />
@@ -16,6 +16,6 @@ export function SiteHeader() {
 
 export function SiteFooter({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/revenda/")) return null;
   return <>{children}</>;
 }
