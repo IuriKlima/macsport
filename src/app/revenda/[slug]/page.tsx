@@ -12,7 +12,7 @@ export default async function RevendaLandingPage({ params }: { params: Promise<{
   const resolvedParams = await params
   
   // 1. Fetch all revendas to find by slug
-  let revenda = null;
+  let revenda: any = null;
   try {
     const querySnapshot = await getDocs(collection(db, "revendas"))
     const revendas = querySnapshot.docs.map(doc => ({

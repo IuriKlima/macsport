@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { db, storage } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Briefcase, Send, CheckCircle, Upload } from "lucide-react";
 import Link from 'next/link';
 
@@ -37,20 +34,23 @@ export default function TrabalheConoscoClient() {
     setError("");
 
     try {
-      let fileUrl = "";
+      const data = new FormData();
+      data.append('nome', formData.nome);
+      data.append('email', formData.email);
+      data.append('telefone', formData.telefone);
+      data.append('linkedin', formData.linkedin);
+      data.append('mensagem', formData.mensagem);
       if (file) {
-        // Envia o arquivo para o Firebase Storage
-        const storageRef = ref(storage, `curriculos/${Date.now()}_${file.name}`);
-        const uploadResult = await uploadBytes(storageRef, file);
-        fileUrl = await getDownloadURL(uploadResult.ref);
+        data.append('file', file);
       }
 
-      await addDoc(collection(db, "curriculos"), {
-        ...formData,
-        curriculo_url: fileUrl,
-        data: serverTimestamp(),
-        status: "Novo"
+      const res = await fetch('/api/forms/curriculo', {
+        method: 'POST',
+        body: data,
       });
+
+      if (!res.ok) throw new Error('Falha na API');
+
       setSuccess(true);
       setFormData({ nome: "", email: "", telefone: "", linkedin: "", mensagem: "" });
       setFile(null);

@@ -25,7 +25,8 @@ export async function POST(request: Request) {
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     // Define o cookie HTTP-Only
-    cookies().set('session', sessionCookie, {
+    const cookieStore = await cookies();
+    cookieStore.set('session', sessionCookie, {
       maxAge: expiresIn,
       httpOnly: true,
       secure: !isDevelopment,

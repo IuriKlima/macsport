@@ -16,7 +16,7 @@ export default async function RevendaProdutoPage({ params }: { params: Promise<{
   const { slug, linha, produtoSlug } = resolvedParams
 
   // 1. Fetch Revenda
-  let revenda = null;
+  let revenda: any = null;
   try {
     const querySnapshot = await getDocs(collection(db, "revendas"))
     const revendas = querySnapshot.docs.map(doc => ({

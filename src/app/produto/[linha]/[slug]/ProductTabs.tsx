@@ -26,7 +26,7 @@ export function ProductTabs({
 
   function getBase64ImageFromUrl(imageUrl: string, format: 'image/jpeg' | 'image/png' = 'image/jpeg'): Promise<string> {
     return new Promise((resolve, reject) => {
-      const img = new Image();
+      const img = new window.Image();
       img.crossOrigin = "Anonymous";
       img.onload = () => {
         // Reduzir imagem para evitar Out of Memory em celulares
@@ -59,7 +59,7 @@ export function ProductTabs({
           reject(e);
         }
       };
-      img.onerror = error => reject(error);
+      img.onerror = (error: string | Event) => reject(error);
       
       try {
         if (imageUrl.startsWith('data:')) {

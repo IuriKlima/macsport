@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
 import { Trash2, Plus, Minus, ArrowLeft } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function OrcamentoClient() {
   const { items, updateQuantity, removeItem, clearCart } = useCartStore();
@@ -39,13 +38,15 @@ export default function OrcamentoClient() {
       return;
     }
 
-    // Salvar no Firebase
+    // Salvar no Firebase via API server-side
     try {
-      await addDoc(collection(db, "orcamentos"), {
-        cliente: formData,
-        itens: items,
-        status: "Novo",
-        data: serverTimestamp()
+      await fetch('/api/forms/orcamento', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cliente: formData,
+          itens: items,
+        })
       });
     } catch (error) {
       console.error("Erro ao salvar orçamento no painel:", error);

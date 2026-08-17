@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Send, CheckCircle, TrendingUp, ShieldCheck, Settings } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
@@ -33,11 +32,12 @@ export default function SejaRevendaClient() {
     setError("");
 
     try {
-      await addDoc(collection(db, "revendas_leads"), {
-        ...formData,
-        data: serverTimestamp(),
-        status: "Novo"
+      const res = await fetch('/api/forms/revenda', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
       });
+      if (!res.ok) throw new Error('Falha na API');
       setSuccess(true);
       setFormData({ nome: "", email: "", telefone: "", empresa: "", cnpj: "", cidade: "", estado: "", mensagem: "" });
     } catch (err: any) {

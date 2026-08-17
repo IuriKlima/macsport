@@ -1,24 +1,26 @@
 export async function uploadToImgBB(file: File): Promise<string> {
-  const API_KEY = 'a08cc6e0bf180575795f7e51689e6a26';
-  
   try {
     // 1. Convert to WebP
     const webpFile = await convertToWebP(file);
     
-    // 2. Upload to ImgBB
+    // 2. Upload to nosso backend proxy
     const formData = new FormData();
     formData.append('image', webpFile);
     
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${API_KEY}`, {
+    // Assumindo que o token admin já vai via Firebase Auth e cookies ou session.
+    // Para simplificar: enviamos sem auth e ajustamos a API para este exemplo se não houver cookie, 
+    // ou se houver admin auth, adicionar aqui.
+    // Vamos apenas fazer um fetch na nossa rota.
+    const response = await fetch(`/api/upload`, {
       method: 'POST',
       body: formData
     });
     
     const data = await response.json();
-    if (data.success) {
-      return data.data.url;
+    if (data.url) {
+      return data.url;
     } else {
-      throw new Error(data.error?.message || 'Erro ao enviar imagem para ImgBB');
+      throw new Error(data.error || 'Erro ao enviar imagem para ImgBB via API local');
     }
   } catch (error) {
     console.error('ImgBB Upload Error:', error);

@@ -4,7 +4,8 @@ import { adminAuth } from "@/lib/firebase-admin";
 import AdminLayoutUI from "./AdminLayoutUI";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const sessionCookie = cookies().get("session")?.value;
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session")?.value;
 
   if (sessionCookie && adminAuth) {
     try {
