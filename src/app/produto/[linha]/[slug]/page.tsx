@@ -41,7 +41,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ linha:
         {/* Produto Hero */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {/* Imagem do Produto */}
-          <div className="bg-card-bg rounded-t-3xl rounded-b-none p-8 flex items-center justify-center border border-border min-h-[400px] lg:min-h-[500px]">
+          <div className="relative bg-card-bg rounded-t-3xl rounded-b-none p-8 flex items-center justify-center border border-border min-h-[400px] lg:min-h-[500px]">
             {(produto.imagem_url || produto.imageUrl) ? (
               <Image src={(produto.imagem_url || produto.imageUrl)} alt={(produto.nome || produto.title) || 'Equipamento Macsport'} fill className="object-contain p-4" sizes="(max-width: 1024px) 100vw, 50vw" priority />
             ) : (

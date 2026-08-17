@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { WhatsAppButton } from "@/components/WhatsAppButton"
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { slugify } from '@/lib/products'
@@ -161,6 +162,7 @@ export default async function ResellerLayout({
           
         </div>
       </footer>
+      {cleanPhone && <WhatsAppButton phoneNumber={cleanPhone} />}
     </div>
   )
 }

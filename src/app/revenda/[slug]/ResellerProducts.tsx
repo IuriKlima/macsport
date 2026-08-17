@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { slugify } from '@/lib/products';
 
 interface Product {
   id: string;
@@ -116,9 +117,13 @@ export default function ResellerProducts({
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             {displayProducts.map((item) => {
               const productName = item.nome || item.title || 'Equipamento Macsport';
+              const pLinha = slugify(item.linha || item.category || 'macsport');
+              const pSlug = slugify(productName);
+              const linkUrl = `/revenda/${resellerSlug}/produto/${pLinha}/${pSlug}`;
+              
               return (
                 <div key={item.id} className="bg-background rounded-2xl overflow-hidden group flex flex-col h-full border border-border hover:border-[#F5C400] transition-colors relative shadow-sm">
-                  <Link href={`/revenda/${resellerSlug}/produto/${encodeURIComponent((item.linha || item.category || 'macsport').toLowerCase())}/${encodeURIComponent((item.nome || item.title || '').toLowerCase().replace(/ /g, '-'))}`} className="relative w-full h-32 md:h-48 bg-card-bg p-2 md:p-4 flex items-center justify-center block">
+                  <Link href={linkUrl} className="relative w-full h-32 md:h-48 bg-card-bg p-2 md:p-4 flex items-center justify-center block">
                     {(item.imagem_url || item.imageUrl) ? (
                       <Image src={(item.imagem_url || item.imageUrl) as string} alt={productName} fill className="object-contain p-2" sizes="(max-width: 768px) 50vw, 25vw" />
                     ) : (
@@ -142,13 +147,13 @@ export default function ResellerProducts({
                         </span>
                       )}
                     </div>
-                    <Link href={`/revenda/${resellerSlug}/produto/${encodeURIComponent((item.linha || item.category || 'macsport').toLowerCase())}/${encodeURIComponent((item.nome || item.title || '').toLowerCase().replace(/ /g, '-'))}`}>
+                    <Link href={linkUrl}>
                       <h3 className="text-sm md:text-base font-bold text-foreground mb-4 line-clamp-2 leading-tight hover:text-[#F5C400] transition-colors">{productName}</h3>
                     </Link>
                     
                     <div className="mt-auto pt-4 border-t border-border flex flex-col gap-2">
                       <Link 
-                        href={`/revenda/${resellerSlug}/produto/${encodeURIComponent((item.linha || item.category || 'macsport').toLowerCase())}/${encodeURIComponent((item.nome || item.title || '').toLowerCase().replace(/ /g, '-'))}`}
+                        href={linkUrl}
                         className="flex items-center justify-center w-full bg-transparent border border-gray-300 text-foreground hover:border-[#F5C400] hover:text-[#F5C400] py-2 px-2 md:py-3 md:px-4 rounded-xl text-xs md:text-sm font-bold transition-colors"
                       >
                         Ver Detalhes

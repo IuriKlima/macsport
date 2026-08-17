@@ -280,8 +280,8 @@ export default async function RootLayout({
                   </div>
                 </div>
               </footer>
+              <WhatsAppButton phoneNumber={settings.whatsapp} />
             </SiteFooter>
-            <WhatsAppButton phoneNumber={settings.whatsapp} />
             </AOSProvider>
           </LanguageProvider>
         </AccessibilityProvider>
