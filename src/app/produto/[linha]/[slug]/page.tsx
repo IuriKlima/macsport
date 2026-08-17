@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowLeft, Check, FileText, Settings, ShieldCheck, Star } from 'lucide-react'
-import { getProductBySlug, getProducts, slugify } from '@/lib/products'
+import { getProductBySlugAndLinha, getProducts, slugify } from '@/lib/products'
 import { notFound } from 'next/navigation'
 import ReviewsSlider from '@/components/ReviewsSlider'
 import { AddToCartButton } from '@/components/AddToCartButton'
@@ -41,7 +41,7 @@ export default async function ProdutoPage({ params }: { params: Promise<{ linha:
           {/* Imagem do Produto */}
           <div className="bg-card-bg rounded-t-3xl rounded-b-none p-8 flex items-center justify-center border border-border min-h-[400px] lg:min-h-[500px]">
             {(produto.imagem_url || produto.imageUrl) ? (
-              <img src={(produto.imagem_url || produto.imageUrl)} alt={(produto.nome || produto.title)} className="w-full h-full object-contain mix-blend-multiply" />
+              <img src={(produto.imagem_url || produto.imageUrl)} alt={(produto.nome || produto.title)} className="w-full h-full object-contain" />
             ) : (
               <div className="w-64 h-64 opacity-50">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-gray-500">

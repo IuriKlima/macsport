@@ -71,10 +71,10 @@ export function HomeProductShowcase({ products }: { products: any[] }) {
       {/* Product Grid (2 cols mobile, 3 cols desktop) */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8 mb-12">
         {filteredProducts.map((item: any) => (
-          <div key={item.id} className="bg-card-bg rounded-[2rem] overflow-hidden group flex flex-col h-full border border-border hover:border-[#F5C400] transition-colors relative shadow-sm">
+          <div key={item.id} className="bg-card-bg rounded-[2rem] overflow-hidden group flex flex-col h-full border border-border hover:border-[#F5C400] transition-colors relative">
             <div className="relative w-full h-40 md:h-56 bg-card-bg p-4 flex items-center justify-center">
               {(item.imagem_url || item.imageUrl) ? (
-                <Image src={(item.imagem_url || item.imageUrl)} alt={(item.nome || item.title)} width={400} height={300} className="w-full h-full object-contain mix-blend-multiply" />
+                <img src={(item.imagem_url || item.imageUrl)} alt={(item.nome || item.title)} className="w-full h-full object-contain" />
               ) : (
                 <div className="w-20 h-20 md:w-32 md:h-32 opacity-20">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full text-foreground"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
