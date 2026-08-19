@@ -24,56 +24,72 @@ export function ProductTabs({
   const [activeTab, setActiveTab] = useState("descricao");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  function getBase64ImageFromUrl(imageUrl: string, format: 'image/jpeg' | 'image/png' = 'image/jpeg'): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = new window.Image();
-      img.crossOrigin = "Anonymous";
-      img.onload = () => {
-        // Reduzir imagem para evitar Out of Memory em celulares
-        const MAX_DIM = 800;
-        let width = img.width;
-        let height = img.height;
-        if (width > MAX_DIM || height > MAX_DIM) {
-          const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-        }
-        
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return reject("No context");
-        
-        if (format === 'image/jpeg') {
-          ctx.fillStyle = "#FFFFFF";
-          ctx.fillRect(0, 0, width, height);
-        }
-        
-        ctx.drawImage(img, 0, 0, width, height);
-        
-        try {
-          const dataURL = canvas.toDataURL(format, 0.85);
-          resolve(dataURL);
-        } catch (e) {
-          reject(e);
-        }
-      };
-      img.onerror = (error: string | Event) => reject(error);
+  async function getBase64ImageFromUrl(imageUrl: string, format: 'image/jpeg' | 'image/png' = 'image/jpeg'): Promise<string> {
+    try {
+      const isDataUrl = imageUrl.startsWith('data:');
+      let imgDataUrl = imageUrl;
       
-      try {
-        if (imageUrl.startsWith('data:')) {
-          img.src = imageUrl;
-        } else {
-          // Adiciona cache-buster para evitar problemas de CORS em cache no Safari/Mobile
-          const urlObj = new URL(imageUrl, window.location.origin);
-          urlObj.searchParams.set('cb', Date.now().toString());
-          img.src = urlObj.toString();
-        }
-      } catch (e) {
-        img.src = imageUrl;
+      if (!isDataUrl) {
+        const urlObj = new URL(imageUrl, window.location.origin);
+        // O cache-buster evita problemas do Safari cachear a imagem sem headers CORS
+        urlObj.searchParams.set('cb', Date.now().toString());
+        
+        // Fazer fetch da imagem direto ajuda a evitar o erro de canvas tainted
+        const response = await fetch(urlObj.toString(), { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const blob = await response.blob();
+        imgDataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
       }
-    });
+
+      return new Promise((resolve, reject) => {
+        const img = new window.Image();
+        // Como agora é um Data URL local, não precisa de crossOrigin e não dá erro de taint
+        img.onload = () => {
+          const MAX_DIM = 800;
+          let width = img.width;
+          let height = img.height;
+          
+          if (width === 0 || height === 0) {
+            width = 800;
+            height = 800;
+          } else if (width > MAX_DIM || height > MAX_DIM) {
+            const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return reject("No context");
+          
+          if (format === 'image/jpeg') {
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, width, height);
+          }
+          
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          try {
+            resolve(canvas.toDataURL(format, 0.85));
+          } catch (e) {
+            reject(e);
+          }
+        };
+        img.onerror = () => reject("Image load error");
+        img.src = imgDataUrl;
+      });
+    } catch (e) {
+      console.warn("Could not load image:", e);
+      return ""; // Retorna vazio para o try/catch superior ignorar
+    }
   }
 
   const handleGeneratePDF = async () => {
