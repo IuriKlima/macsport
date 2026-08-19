@@ -30,7 +30,16 @@ export function ProductTabs({
       let imgDataUrl = imageUrl;
       
       if (!isDataUrl) {
-        const urlObj = new URL(imageUrl, window.location.origin);
+        let finalUrl = imageUrl;
+        
+        // Se a imagem for externa (ex: ImgBB, Firebase), usamos o Next.js Image Optimization como PROXY
+        // Isso burla o CORS porque o Next.js baixa a imagem no backend e serve localmente!
+        // Não fazemos proxy do QR Code (api.qrserver.com) pois não está no next.config.ts e já envia CORS.
+        if (imageUrl.startsWith('http') && !imageUrl.includes('qrserver.com')) {
+          finalUrl = `/_next/image?url=${encodeURIComponent(imageUrl)}&w=828&q=75`;
+        }
+
+        const urlObj = new URL(finalUrl, window.location.origin);
         // O cache-buster evita problemas do Safari cachear a imagem sem headers CORS
         urlObj.searchParams.set('cb', Date.now().toString());
         
