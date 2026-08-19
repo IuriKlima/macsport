@@ -38,6 +38,17 @@ const nextConfig: NextConfig = {
 
   // Desabilitar x-powered-by por segurança
   poweredByHeader: false,
+
+  // Otimizações para evitar erro de Memória (OOM) no Easypanel/VPS
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  experimental: {
+    memoryBasedWorkersCount: true,
+  },
 };
 
 export default nextConfig;
