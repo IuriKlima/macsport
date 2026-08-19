@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase-admin';
+import { verifyLocalAdmin } from '@/lib/admin-check';
 
 export async function POST(request: Request) {
+  await verifyLocalAdmin();
   try {
     // Basic auth check: we expect a Firebase ID token in the Authorization header
     // In a real app with next-firebase-auth or session cookies, you'd verify the cookie.

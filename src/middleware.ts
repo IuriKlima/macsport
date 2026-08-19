@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 function isLocalAdminEnabled(request: NextRequest): boolean {
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV === 'production') {
     return false;
   }
   
@@ -11,7 +11,14 @@ function isLocalAdminEnabled(request: NextRequest): boolean {
   }
 
   const hostname = request.nextUrl.hostname;
-  if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+  const hostHeader = request.headers.get('host') || '';
+  const hostHeaderName = hostHeader.split(':')[0]; // remove port
+
+  const isAllowedHost = (host: string) => {
+    return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+  };
+
+  if (!isAllowedHost(hostname) || !isAllowedHost(hostHeaderName)) {
     return false;
   }
 
@@ -21,25 +28,33 @@ function isLocalAdminEnabled(request: NextRequest): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Bloqueio de painel e auth em produção
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/auth') || pathname.startsWith('/api/admin')) {
+  const isAdminRoute = 
+    pathname.startsWith('/admin') || 
+    pathname.startsWith('/api/auth') || 
+    pathname.startsWith('/api/admin') ||
+    pathname.startsWith('/api/upload') ||
+    pathname.startsWith('/api/migrate') ||
+    pathname.startsWith('/api/duplicate-evo');
+
+  if (isAdminRoute) {
     if (!isLocalAdminEnabled(request)) {
-      // Retorna 404 para esconder a existência dessas rotas
       return new NextResponse(null, { status: 404 });
     }
   }
 
   const session = request.cookies.get('session')?.value;
 
-  // Rotas públicas do admin
-  if (pathname === '/admin/login' || pathname === '/admin/signup') {
+  if (pathname === '/admin/signup') {
+    return new NextResponse(null, { status: 404 });
+  }
+
+  if (pathname === '/admin/login') {
     if (session) {
       return NextResponse.redirect(new URL('/admin', request.url));
     }
     return NextResponse.next();
   }
 
-  // Rotas protegidas do admin
   if (pathname.startsWith('/admin')) {
     if (!session) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
@@ -50,5 +65,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/auth/:path*', '/api/admin/:path*'],
+  matcher: [
+    '/admin/:path*', 
+    '/api/auth/:path*', 
+    '/api/admin/:path*', 
+    '/api/upload', 
+    '/api/migrate', 
+    '/api/duplicate-evo'
+  ],
 };

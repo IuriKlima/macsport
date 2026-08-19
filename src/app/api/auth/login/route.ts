@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase-admin';
 import { cookies } from 'next/headers';
+import { verifyLocalAdmin } from '@/lib/admin-check';
 
 export async function POST(request: Request) {
+  await verifyLocalAdmin();
   try {
     const { idToken } = await request.json();
 

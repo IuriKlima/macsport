@@ -1,49 +1,56 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { z } from 'zod';
+import { formsDb, formsStorage } from '@/lib/firebase-forms';
 import { FieldValue } from 'firebase-admin/firestore';
-import { getStorage } from 'firebase-admin/storage';
-import { getApps } from 'firebase-admin/app';
+import { verifyTurnstile } from '@/lib/turnstile';
+
+const curriculoSchema = z.object({
+  nome: z.string().min(1),
+  email: z.string().email(),
+  telefone: z.string().min(1),
+  linkedin: z.string().optional(),
+  mensagem: z.string().optional(),
+  token: z.string(),
+}).strict();
 
 export async function POST(request: Request) {
   try {
-    const formData = await request.formData();
-    
-    const nome = formData.get('nome') as string;
-    const email = formData.get('email') as string;
-    const telefone = formData.get('telefone') as string;
-    const linkedin = (formData.get('linkedin') as string) || '';
-    const mensagem = (formData.get('mensagem') as string) || '';
-    const token = formData.get('token') as string;
-    const file = formData.get('file') as File | null;
-
-    if (!nome || !email || !telefone) {
-      return NextResponse.json({ error: 'Dados inválidos' }, { status: 400 });
+    const contentLength = Number(request.headers.get('content-length') || 0);
+    if (contentLength > 5 * 1024 * 1024) { // 5MB limit
+      return NextResponse.json({ error: 'Bad Request' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
     }
 
-    if (token) {
-      const secret = process.env.TURNSTILE_SECRET_KEY;
-      if (secret) {
-        const verify = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `secret=${secret}&response=${token}`,
-        });
-        const verifyJson = await verify.json();
-        if (!verifyJson.success) {
-          return NextResponse.json({ error: 'Validação de CAPTCHA falhou' }, { status: 400 });
-        }
+    const formData = await request.formData();
+    const data: Record<string, any> = {};
+    let file: File | null = null;
+
+    for (const [key, value] of formData.entries()) {
+      if (key === 'file') {
+        file = value as File;
+      } else {
+        data[key] = value;
       }
     }
 
-    if (!adminDb || getApps().length === 0) {
-      return NextResponse.json({ error: 'Firebase Admin não inicializado' }, { status: 500 });
+    const parsed = curriculoSchema.safeParse(data);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Bad Request' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
+    }
+
+    const isValidTurnstile = await verifyTurnstile(parsed.data.token, request);
+    if (!isValidTurnstile) {
+      return NextResponse.json({ error: 'Bad Request' }, { status: 400, headers: { 'Cache-Control': 'no-store' } });
+    }
+
+    if (!formsDb || !formsStorage) {
+      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
     }
 
     let curriculo_url = '';
 
-    if (file) {
+    if (file && file.size > 0) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      const bucket = getStorage().bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET);
+      const bucket = formsStorage.bucket(process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET);
       const filename = `curriculos/${Date.now()}_${file.name}`;
       const fileRef = bucket.file(filename);
       
@@ -55,20 +62,17 @@ export async function POST(request: Request) {
       curriculo_url = `https://storage.googleapis.com/${bucket.name}/${filename}`;
     }
 
-    await adminDb.collection('curriculos').add({
-      nome,
-      email,
-      telefone,
-      linkedin,
-      mensagem,
+    const { token, ...curriculoData } = parsed.data;
+
+    await formsDb.collection('curriculos').add({
+      ...curriculoData,
       curriculo_url,
       status: 'Novo',
       data: FieldValue.serverTimestamp(),
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500, headers: { 'Cache-Control': 'no-store' } });
   }
 }

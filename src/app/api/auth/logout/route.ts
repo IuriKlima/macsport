@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
+import { verifyLocalAdmin } from '@/lib/admin-check';
 
 export async function POST() {
+  await verifyLocalAdmin();
   const isDevelopment = process.env.NODE_ENV === 'development';
 
   const cookieStore = await cookies();
