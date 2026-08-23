@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { FileText, Download, ShieldCheck, Award, Loader2 } from "lucide-react";
+import { FileText, Download, ShieldCheck, Award, Loader2, Settings } from "lucide-react";
 
 export function ProductTabs({ 
   descriptionLines, 
@@ -278,8 +278,8 @@ export function ProductTabs({
           onClick={() => setActiveTab("pdf")}
           className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'pdf' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
         >
-          <Download size={18} />
-          BAIXAR PDF DO PRODUTO
+          <Settings size={18} />
+          INSTRUÇÕES DE USO
         </button>
         <button 
           onClick={() => setActiveTab("garantia")}
@@ -288,15 +288,6 @@ export function ProductTabs({
           <ShieldCheck size={18} />
           GARANTIA
         </button>
-        {comoUsarImg && (
-          <button 
-            onClick={() => setActiveTab("comousar")}
-            className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'comousar' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
-          >
-            <Award size={18} />
-            COMO USAR
-          </button>
-        )}
       </div>
 
       <div className="bg-card-bg rounded-[2rem] p-8 border border-border min-h-[300px]">
@@ -310,27 +301,16 @@ export function ProductTabs({
                 <p>Nenhuma descrição adicional disponível.</p>
               )}
             </div>
-          </div>
-        )}
 
-        {activeTab === "pdf" && (
-          <div className="animate-in fade-in duration-500 flex flex-col items-center justify-center py-10 text-center">
-            <div className="w-20 h-20 bg-[#F5C400]/10 text-[#F5C400] rounded-full flex items-center justify-center mb-6">
-              <Download size={40} />
-            </div>
-            <h3 className="text-2xl font-bold mb-4 text-foreground">Catálogo e Especificações Técnicas</h3>
-            <p className="text-text-muted mb-8 max-w-lg">
-              Faça o download do PDF completo com a imagem, título, código e as especificações técnicas do {productName}.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            {/* Botão Baixar PDF ao final da descrição */}
+            <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row gap-4">
               <button 
                 onClick={handleGeneratePDF}
                 disabled={isGenerating}
                 className="bg-[#F5C400] text-black font-bold px-8 py-3 rounded-[2rem] flex items-center gap-2 hover:bg-yellow-500 transition-colors disabled:opacity-70"
               >
                 {isGenerating ? <Loader2 size={20} className="animate-spin" /> : <Download size={20} />}
-                {isGenerating ? "GERANDO ARQUIVO..." : "GERAR PDF DO PRODUTO"}
+                {isGenerating ? "GERANDO ARQUIVO..." : "BAIXAR PDF DO PRODUTO"}
               </button>
 
               {pdfUrl && (
@@ -345,6 +325,30 @@ export function ProductTabs({
                 </a>
               )}
             </div>
+          </div>
+        )}
+
+        {activeTab === "pdf" && (
+          <div className="animate-in fade-in duration-500">
+            <h3 className="text-2xl font-bold mb-6 text-foreground">Instruções de Uso</h3>
+            {comoUsarImg ? (
+              <div className="w-full rounded-[2rem] overflow-hidden border border-border">
+                <img 
+                  src={comoUsarImg} 
+                  alt={`Instruções de uso - ${productName}`} 
+                  className="w-full h-auto object-cover" 
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="w-20 h-20 bg-[#F5C400]/10 text-[#F5C400] rounded-full flex items-center justify-center mb-6">
+                  <Settings size={40} />
+                </div>
+                <p className="text-text-muted max-w-lg">
+                  As instruções de uso para o <strong className="text-foreground">{productName}</strong> ainda não foram adicionadas. Entre em contato conosco para mais informações.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -391,14 +395,6 @@ export function ProductTabs({
           </div>
         )}
 
-        {activeTab === "comousar" && comoUsarImg && (
-          <div className="animate-in fade-in duration-500">
-            <h3 className="text-2xl font-bold mb-6 text-foreground">Como Usar</h3>
-            <div className="w-full relative rounded-[2rem] overflow-hidden border border-border min-h-[400px]">
-              <Image src={comoUsarImg} alt={`Como usar o ${productName}`} fill className="object-contain" sizes="(max-width: 1024px) 100vw, 80vw" />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
