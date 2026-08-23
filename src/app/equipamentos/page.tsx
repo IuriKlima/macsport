@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic';
 
 export default async function EquipamentosPage({ searchParams }: { searchParams: Promise<{ categoria?: string, linha?: string }> }) {
   const resolvedSearchParams = await searchParams

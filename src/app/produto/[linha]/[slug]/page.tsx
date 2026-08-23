@@ -8,7 +8,7 @@ import { AddToCartButton } from '@/components/AddToCartButton'
 import { ProductTabs } from './ProductTabs'
 import { ShareButton } from '@/components/ShareButton'
 
-export const revalidate = 60; // ISR for Firebase
+export const dynamic = 'force-dynamic';
 
 export default async function ProdutoPage({ params }: { params: Promise<{ linha: string, slug: string }> }) {
   const resolvedParams = await params

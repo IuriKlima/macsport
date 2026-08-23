@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 
-export const revalidate = 60; // ISR for Firebase
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Quem Somos',
   description: 'Conheça a Macsport: fabricante brasileiro de equipamentos profissionais para academias. Engenharia nacional, inovação e qualidade.',
