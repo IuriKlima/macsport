@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { X, Send, User } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 type Message = { id: number; sender: "bot" | "user"; text: string };
 type Step = "name" | "city" | "phone" | "done";
@@ -68,13 +70,28 @@ export function WhatsAppButton({ phoneNumber }: { phoneNumber?: string }) {
         setMessages(prev => [...prev, { id: Date.now(), sender: "bot", text: `Ótimo! Por último, qual o seu telefone/WhatsApp?` }]);
         setStep("phone");
       } else if (step === "phone") {
-        setUserData(prev => ({ ...prev, phone: text }));
+        const finalUserData = { ...userData, phone: text };
+        setUserData(finalUserData);
         setMessages(prev => [...prev, { id: Date.now(), sender: "bot", text: `Perfeito! Vou te transferir para um de nossos especialistas agora...` }]);
         setStep("done");
         
+        // Save to Firebase
+        try {
+          addDoc(collection(db, "leads_whatsapp"), {
+            nome: finalUserData.name,
+            cidade: finalUserData.city,
+            telefone: text,
+            data: serverTimestamp(),
+            origem: "Bot Flutuante WhatsApp",
+            status: "Novo"
+          });
+        } catch (e) {
+          console.error("Erro ao salvar lead", e);
+        }
+
         // Redirect to WhatsApp
         setTimeout(() => {
-          const waText = encodeURIComponent(`Olá, gostaria de atendimento. Meu nome é ${userData.name || text} de ${userData.city}.`);
+          const waText = encodeURIComponent(`Olá, gostaria de atendimento. Meu nome é ${finalUserData.name} de ${finalUserData.city}.`);
           window.open(`https://wa.me/${cleanNumber}?text=${waText}`, '_blank');
           // Reset chat after a while
           setTimeout(() => {
