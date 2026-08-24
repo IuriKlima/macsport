@@ -265,137 +265,224 @@ export function ProductTabs({
   };
 
   return (
-    <div className="mt-16">
-      <div className="flex border-b border-border mb-8 overflow-x-auto hide-scrollbar">
-        <button 
-          onClick={() => setActiveTab("descricao")}
-          className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'descricao' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
-        >
-          <FileText size={18} />
-          DESCRIÇÃO COMPLETA
-        </button>
-        <button 
-          onClick={() => setActiveTab("pdf")}
-          className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'pdf' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
-        >
-          <Settings size={18} />
-          INSTRUÇÕES DE USO
-        </button>
-        <button 
-          onClick={() => setActiveTab("garantia")}
-          className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'garantia' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
-        >
-          <ShieldCheck size={18} />
-          GARANTIA
-        </button>
-      </div>
+    <>
+      {/* Desktop View: Tabs */}
+      <div className="hidden md:block mt-16">
+        <div className="flex border-b border-border mb-8 overflow-x-auto hide-scrollbar">
+          <button 
+            onClick={() => setActiveTab("descricao")}
+            className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'descricao' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
+          >
+            <FileText size={18} />
+            DESCRIÇÃO COMPLETA
+          </button>
+          <button 
+            onClick={() => setActiveTab("pdf")}
+            className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'pdf' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
+          >
+            <Settings size={18} />
+            INSTRUÇÕES DE USO
+          </button>
+          <button 
+            onClick={() => setActiveTab("garantia")}
+            className={`px-6 py-4 whitespace-nowrap flex items-center gap-2 transition-colors ${activeTab === 'garantia' ? 'text-[#F5C400] border-b-2 border-[#F5C400] font-bold' : 'text-text-muted hover:text-foreground font-semibold'}`}
+          >
+            <ShieldCheck size={18} />
+            GARANTIA
+          </button>
+        </div>
 
-      <div className="bg-card-bg rounded-[2rem] p-8 border border-border min-h-[300px]">
-        {activeTab === "descricao" && (
-          <div className="animate-in fade-in duration-500">
-            <h3 className="text-2xl font-bold mb-6 text-foreground">Sobre o Equipamento</h3>
-            <div className="prose prose-invert max-w-none text-text-muted">
-              {descriptionLines.length > 0 ? descriptionLines.map((line: string, i: number) => (
-                <p key={i} className="mb-4 leading-relaxed">{line}.</p>
-              )) : (
-                <p>Nenhuma descrição adicional disponível.</p>
-              )}
-            </div>
+        <div className="bg-card-bg rounded-[2rem] p-8 border border-border min-h-[300px]">
+          {activeTab === "descricao" && (
+            <div className="animate-in fade-in duration-500">
+              <h3 className="text-2xl font-bold mb-6 text-foreground">Sobre o Equipamento</h3>
+              <div className="prose prose-invert max-w-none text-text-muted">
+                {descriptionLines.length > 0 ? descriptionLines.map((line: string, i: number) => (
+                  <p key={i} className="mb-4 leading-relaxed">{line}.</p>
+                )) : (
+                  <p>Nenhuma descrição adicional disponível.</p>
+                )}
+              </div>
 
-            {/* Botão Baixar PDF ao final da descrição */}
-            <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row gap-4">
-              <button 
-                onClick={handleGeneratePDF}
-                disabled={isGenerating}
-                className="bg-[#F5C400] text-black font-bold px-8 py-3 rounded-[2rem] flex items-center gap-2 hover:bg-yellow-500 transition-colors disabled:opacity-70"
-              >
-                {isGenerating ? <Loader2 size={20} className="animate-spin" /> : <Download size={20} />}
-                {isGenerating ? "GERANDO ARQUIVO..." : "BAIXAR PDF DO PRODUTO"}
-              </button>
-
-              {pdfUrl && (
-                <a 
-                  href={pdfUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="bg-transparent border border-[#F5C400] text-[#F5C400] hover:bg-[#F5C400]/10 font-bold px-8 py-3 rounded-[2rem] flex items-center gap-2 transition-colors"
+              {/* Botão Baixar PDF ao final da descrição */}
+              <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={handleGeneratePDF}
+                  disabled={isGenerating}
+                  className="bg-[#F5C400] text-black font-bold px-8 py-3 rounded-[2rem] flex items-center gap-2 hover:bg-yellow-500 transition-colors disabled:opacity-70"
                 >
-                  <FileText size={20} />
-                  BAIXAR MANUAL ORIGINAL
-                </a>
+                  {isGenerating ? <Loader2 size={20} className="animate-spin" /> : <Download size={20} />}
+                  {isGenerating ? "GERANDO ARQUIVO..." : "BAIXAR PDF DO PRODUTO"}
+                </button>
+
+                {pdfUrl && (
+                  <a 
+                    href={pdfUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="bg-transparent border border-[#F5C400] text-[#F5C400] hover:bg-[#F5C400]/10 font-bold px-8 py-3 rounded-[2rem] flex items-center gap-2 transition-colors"
+                  >
+                    <FileText size={20} />
+                    BAIXAR MANUAL ORIGINAL
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "pdf" && (
+            <div className="animate-in fade-in duration-500">
+              <h3 className="text-2xl font-bold mb-6 text-foreground">Instruções de Uso</h3>
+              {comoUsarImg ? (
+                <div className="w-full rounded-[2rem] overflow-hidden border border-border">
+                  <img 
+                    src={comoUsarImg} 
+                    alt={`Instruções de uso - ${productName}`} 
+                    className="w-full h-auto object-cover" 
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-20 h-20 bg-[#F5C400]/10 text-[#F5C400] rounded-full flex items-center justify-center mb-6">
+                    <Settings size={40} />
+                  </div>
+                  <p className="text-text-muted max-w-lg">
+                    As instruções de uso para o <strong className="text-foreground">{productName}</strong> ainda não foram adicionadas. Entre em contato conosco para mais informações.
+                  </p>
+                </div>
               )}
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === "pdf" && (
-          <div className="animate-in fade-in duration-500">
-            <h3 className="text-2xl font-bold mb-6 text-foreground">Instruções de Uso</h3>
-            {comoUsarImg ? (
-              <div className="w-full rounded-[2rem] overflow-hidden border border-border">
-                <img 
-                  src={comoUsarImg} 
-                  alt={`Instruções de uso - ${productName}`} 
-                  className="w-full h-auto object-cover" 
-                />
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-20 h-20 bg-[#F5C400]/10 text-[#F5C400] rounded-full flex items-center justify-center mb-6">
-                  <Settings size={40} />
-                </div>
-                <p className="text-text-muted max-w-lg">
-                  As instruções de uso para o <strong className="text-foreground">{productName}</strong> ainda não foram adicionadas. Entre em contato conosco para mais informações.
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === "garantia" && (
-          <div className="animate-in fade-in duration-500">
-            {/* Certificado de Garantia visual */}
-            <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-black border border-[#F5C400]/30 rounded-[2rem] p-8 md:p-12 shadow-2xl">
-              {/* Marca d'água */}
-              <div className="absolute -right-10 -bottom-10 opacity-5 pointer-events-none">
-                <Award size={300} />
-              </div>
-              
-              <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
-                <div className="flex-shrink-0 w-32 h-32 bg-gradient-to-br from-[#F5C400] to-yellow-600 rounded-full flex items-center justify-center shadow-lg border-4 border-black">
-                  <div className="text-center text-black">
-                    <span className="block text-4xl font-black leading-none">5</span>
-                    <span className="block text-xs font-bold uppercase tracking-widest">Anos</span>
-                  </div>
+          {activeTab === "garantia" && (
+            <div className="animate-in fade-in duration-500">
+              {/* Certificado de Garantia visual */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-black border border-[#F5C400]/30 rounded-[2rem] p-8 md:p-12 shadow-2xl">
+                {/* Marca d'água */}
+                <div className="absolute -right-10 -bottom-10 opacity-5 pointer-events-none">
+                  <Award size={300} />
                 </div>
                 
-                <div>
-                  <h3 className="text-3xl font-light text-white mb-2 flex items-center gap-3">
-                    <Award className="text-[#F5C400]" size={32} />
-                    Certificado de Garantia
-                  </h3>
-                  <div className="h-1 w-20 bg-[#F5C400] mb-6"></div>
+                <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
+                  <div className="flex-shrink-0 w-32 h-32 bg-gradient-to-br from-[#F5C400] to-yellow-600 rounded-full flex items-center justify-center shadow-lg border-4 border-black">
+                    <div className="text-center text-black">
+                      <span className="block text-4xl font-black leading-none">5</span>
+                      <span className="block text-xs font-bold uppercase tracking-widest">Anos</span>
+                    </div>
+                  </div>
                   
-                  <p className="text-gray-300 mb-4 leading-relaxed text-lg">
-                    A Macsport atesta a qualidade excepcional de seus produtos. O equipamento <strong className="text-white">{productName}</strong> possui cobertura total contra defeitos de fabricação em sua estrutura.
-                  </p>
-                  
-                  <ul className="text-gray-400 space-y-2 font-medium">
-                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full"></div> <strong>5 anos</strong> para estrutura principal (chassi).</li>
-                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full"></div> <strong>1 ano</strong> para pintura e soldas.</li>
-                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full"></div> <strong>6 meses</strong> para estofados, cabos, polias e rolamentos.</li>
-                  </ul>
-                  
-                  <p className="text-xs text-gray-500 mt-6">
-                    Para acionar a garantia, entre em contato com nosso suporte técnico informando o número de série do seu equipamento e a nota fiscal de compra.
-                  </p>
+                  <div>
+                    <h3 className="text-3xl font-light text-white mb-2 flex items-center gap-3">
+                      <Award className="text-[#F5C400]" size={32} />
+                      Certificado de Garantia
+                    </h3>
+                    <div className="h-1 w-20 bg-[#F5C400] mb-6"></div>
+                    
+                    <p className="text-gray-300 mb-4 leading-relaxed text-lg">
+                      A Macsport atesta a qualidade excepcional de seus produtos. O equipamento <strong className="text-white">{productName}</strong> possui cobertura total contra defeitos de fabricação em sua estrutura.
+                    </p>
+                    
+                    <ul className="text-gray-400 space-y-2 font-medium">
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full"></div> <strong>5 anos</strong> para estrutura principal (chassi).</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full"></div> <strong>1 ano</strong> para pintura e soldas.</li>
+                      <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full"></div> <strong>6 meses</strong> para estofados, cabos, polias e rolamentos.</li>
+                    </ul>
+                    
+                    <p className="text-xs text-gray-500 mt-6">
+                      Para acionar a garantia, entre em contato com nosso suporte técnico informando o número de série do seu equipamento e a nota fiscal de compra.
+                    </p>
+                  </div>
                 </div>
               </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile View: Stacked Sections */}
+      <div className="md:hidden mt-8 flex flex-col gap-6">
+        {/* Instruções de Uso (Top on Mobile) */}
+        {comoUsarImg && (
+          <div className="bg-card-bg rounded-[2rem] p-6 border border-border">
+            <h3 className="text-xl font-bold mb-4 text-foreground flex items-center gap-2">
+              <Settings size={20} className="text-[#F5C400]" />
+              Instruções de Uso
+            </h3>
+            <div className="w-full rounded-2xl overflow-hidden border border-border">
+              <img 
+                src={comoUsarImg} 
+                alt={`Instruções de uso - ${productName}`} 
+                className="w-full h-auto object-cover" 
+              />
             </div>
           </div>
         )}
 
+        {/* Descrição (Middle on Mobile) */}
+        <div className="bg-card-bg rounded-[2rem] p-6 border border-border">
+          <h3 className="text-xl font-bold mb-4 text-foreground flex items-center gap-2">
+            <FileText size={20} className="text-[#F5C400]" />
+            Sobre o Equipamento
+          </h3>
+          <div className="prose prose-invert max-w-none text-text-muted text-sm">
+            {descriptionLines.length > 0 ? descriptionLines.map((line: string, i: number) => (
+              <p key={i} className="mb-3 leading-relaxed">{line}.</p>
+            )) : (
+              <p>Nenhuma descrição adicional disponível.</p>
+            )}
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-border flex flex-col gap-3">
+            <button 
+              onClick={handleGeneratePDF}
+              disabled={isGenerating}
+              className="bg-[#F5C400] text-black font-bold px-6 py-3 rounded-[2rem] flex items-center justify-center gap-2 hover:bg-yellow-500 transition-colors disabled:opacity-70 text-sm"
+            >
+              {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+              {isGenerating ? "GERANDO ARQUIVO..." : "BAIXAR PDF"}
+            </button>
+
+            {pdfUrl && (
+              <a 
+                href={pdfUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-transparent border border-[#F5C400] text-[#F5C400] hover:bg-[#F5C400]/10 font-bold px-6 py-3 rounded-[2rem] flex items-center justify-center gap-2 transition-colors text-sm"
+              >
+                <FileText size={18} />
+                MANUAL ORIGINAL
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Garantia (Bottom on Mobile) */}
+        <div className="bg-card-bg rounded-[2rem] p-6 border border-border relative overflow-hidden">
+          <div className="absolute -right-4 -bottom-4 opacity-5 pointer-events-none">
+            <Award size={150} />
+          </div>
+          
+          <div className="relative z-10 flex flex-col gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-[#F5C400] to-yellow-600 rounded-full flex items-center justify-center shadow-lg border-2 border-black">
+                <div className="text-center text-black">
+                  <span className="block text-xl font-black leading-none">5</span>
+                  <span className="block text-[10px] font-bold uppercase tracking-widest">Anos</span>
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white leading-tight">Certificado<br/>de Garantia</h3>
+              </div>
+            </div>
+            
+            <ul className="text-gray-400 space-y-2 text-sm mt-2">
+              <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full mt-1.5 flex-shrink-0"></div> <span><strong>5 anos</strong> estrutura (chassi).</span></li>
+              <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full mt-1.5 flex-shrink-0"></div> <span><strong>1 ano</strong> pintura e soldas.</span></li>
+              <li className="flex items-start gap-2"><div className="w-1.5 h-1.5 bg-[#F5C400] rounded-full mt-1.5 flex-shrink-0"></div> <span><strong>6 meses</strong> estofados, cabos e roldanas.</span></li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
