@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import { Map, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
 
