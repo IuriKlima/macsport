@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getPostById, getPosts } from "@/lib/blog";
 import { notFound } from "next/navigation";
 import Link from "next/link";
